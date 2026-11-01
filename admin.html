@@ -347,5 +347,12 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="admin.js"></script>
+<script>
+  // رابط المتجر — يعمل على أي استضافة (جذر أو مجلد فرعي)
+  (function initStoreUrl() {
+    const el = document.getElementById('storeUrl');
+    if (el && !el.value) el.value = location.origin + location.pathname.replace(/admin(\.html)?$/, '');
+  })();
+</script>
 </body>
 </html>
