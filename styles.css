@@ -832,6 +832,7 @@ body.has-cursor .cursor-glow{opacity:1}
 .share-linkbox{display:flex;gap:.5rem;margin-bottom:.7rem}
 .share-linkbox input{
   flex:1;min-width:0;padding:.75rem .9rem;border-radius:12px;
+  text-overflow:ellipsis;white-space:nowrap;overflow:hidden;
   background:rgba(0,0,0,.35);border:1px solid var(--stroke);color:var(--muted);
   font-size:.76rem;font-family:ui-monospace,Menlo,monospace;
 }
