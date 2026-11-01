@@ -431,6 +431,28 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       .map(([k, label, aria]) => ({ key: k, label, aria, href: socialUrl(social[k]) }));
   }
 
+  let heroTiltBound = false;
+  function initHeroTilt() {
+    if (heroTiltBound) return;
+    const wrap = $('#heroFollow');
+    const box = $('#socialLinksHero');
+    if (!wrap || !box) return;
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fine = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+    if (reduce || !fine) return;
+    heroTiltBound = true;
+    wrap.addEventListener('pointermove', (e) => {
+      const r = wrap.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      box.style.transform = `rotateY(${x * 7}deg) rotateX(${-y * 7}deg)`;
+    });
+    wrap.addEventListener('pointerleave', () => {
+      box.style.transform = '';
+    });
+  }
+
   function renderSocial() {
     const s = state.settings || DEFAULT_SETTINGS;
     const items = socialItems(s);
@@ -448,6 +470,31 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     const block = $('#socialBlock');
     if (block) block.hidden = items.length === 0;
 
+    const hero = $('#socialLinksHero');
+    if (hero) {
+      const order = ['instagram', 'facebook', 'tiktok'];
+      const tiles = items
+        .slice()
+        .sort((x, y) => order.indexOf(x.key) - order.indexOf(y.key))
+        .map(
+          (i) =>
+            `<a class="s3d s3d-${({ instagram: 'ig', facebook: 'fb', tiktok: 'tt' })[i.key] || i.key}" href="${esc(i.href)}" target="_blank" rel="noopener noreferrer" aria-label="${i.aria}">
+               <span class="s3d-face">${SOCIAL_ICONS[i.key] || ''}</span>
+               <span class="s3d-cap">${i.label}</span>
+             </a>`
+        )
+        .join('');
+      const chTile = channel
+        ? `<a class="s3d s3d-wa" href="${esc(channel)}" target="_blank" rel="noopener noreferrer" aria-label="قناة واتساب — العروض والفيديوهات">
+             <span class="s3d-face">${SOCIAL_ICONS.whatsapp}</span>
+             <span class="s3d-cap">قناة واتساب</span>
+           </a>`
+        : '';
+      hero.innerHTML = tiles + chTile;
+      const wrap = $('#heroFollow');
+      if (wrap) wrap.hidden = !(items.length || channel);
+    }
+
     const menu = $('#socialLinksMenu');
     if (menu) {
       const all = items
@@ -462,6 +509,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       menu.innerHTML = all + ch;
       menu.hidden = !(items.length || channel);
     }
+
+    initHeroTilt();
   }
 
   /* ----------------------- الأقسام ----------------------- */

@@ -994,3 +994,121 @@ img.brand-mark{
   .social a span{font-size:.72rem}
   .social a{padding:0 .7rem;height:36px}
 }
+
+/* ===================== أيقونات التواصل ثلاثية الأبعاد (الواجهة) ===================== */
+.hero-follow{
+  margin-top:1.9rem;display:flex;flex-direction:column;gap:.75rem;align-items:flex-start;
+  animation:fadeUp .9s var(--ease) both .5s;
+}
+.hero-follow-label{
+  display:inline-flex;align-items:center;gap:.55rem;
+  font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold-deep);font-weight:700;
+}
+.hero-follow-label i{display:block;width:26px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-deep))}
+.hero-follow-label i:last-child{background:linear-gradient(90deg,var(--gold-deep),transparent)}
+
+.social3d{
+  display:flex;gap:.9rem;align-items:flex-start;
+  perspective:800px;transform-style:preserve-3d;
+  transition:transform .35s var(--ease);
+}
+.s3d{
+  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  transform-style:preserve-3d;text-decoration:none;
+}
+.s3d-face{
+  position:relative;width:58px;height:58px;border-radius:18px;
+  display:grid;place-items:center;overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 50% -10%,rgba(96,168,142,.32),rgba(96,168,142,0) 60%),
+    linear-gradient(155deg,#2c574a 0%,#12302a 46%,#081814 100%);
+  border:1px solid rgba(201,162,74,.38);
+  color:var(--gold-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    inset 0 -9px 15px -9px rgba(0,0,0,.92),
+    0 3px 0 -1px #0b1d18,
+    0 5px 0 -1px rgba(201,162,74,.28),
+    0 16px 24px -14px rgba(0,0,0,.95),
+    0 30px 42px -30px rgba(0,0,0,.9);
+  transform:perspective(700px) rotateX(8deg) translateZ(0);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .35s,color .35s;
+}
+.s3d-face svg{width:22px;height:22px;position:relative;z-index:1}
+.s3d-face::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,0) 46%),
+    linear-gradient(118deg,transparent 42%,rgba(255,255,255,.12) 50%,transparent 58%);
+}
+.s3d-face::after{
+  content:'';position:absolute;left:14%;right:14%;top:6px;height:14px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(50% 100% at 50% 0,rgba(255,255,255,.22),rgba(255,255,255,0) 75%);
+}
+/* وَهَج أرضي */
+.s3d::after{
+  content:'';position:absolute;bottom:1.35rem;left:50%;width:46px;height:9px;transform:translateX(-50%);
+  border-radius:50%;background:radial-gradient(50% 100% at 50% 0,rgba(201,162,74,.45),rgba(201,162,74,0) 72%);
+  filter:blur(3px);opacity:.65;transition:opacity .4s;pointer-events:none;
+}
+.s3d{position:relative}
+.s3d-face svg{transition:transform .45s var(--ease)}
+.s3d-cap{
+  font-size:.68rem;color:var(--muted-2);font-weight:600;letter-spacing:.01em;
+  transition:color .35s;
+}
+.s3d:hover .s3d-face,.s3d:focus-visible .s3d-face{
+  transform:perspective(700px) rotateX(0deg) translateY(-9px) scale(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 -9px 15px -9px rgba(0,0,0,.8),
+    0 4px 0 -1px #0b1d18,
+    0 6px 0 -1px rgba(201,162,74,.45),
+    0 22px 30px -14px rgba(0,0,0,.95),
+    0 0 34px -8px rgba(201,162,74,.6);
+}
+.s3d:hover::after,.s3d:focus-visible::after{opacity:1}
+.s3d:hover .s3d-face svg{transform:scale(1.1)}
+.s3d:hover .s3d-cap,.s3d:focus-visible .s3d-cap{color:var(--gold-2)}
+.s3d:focus-visible{outline:none}
+.s3d:focus-visible .s3d-face{outline:2px solid var(--gold-2);outline-offset:3px}
+
+/* هوية كل شبكة عند المرور */
+.s3d-ig:hover .s3d-face,.s3d-ig:focus-visible .s3d-face{
+  border-color:rgba(214,71,140,.6);color:#ffc6e0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 18px 26px -14px rgba(0,0,0,.95),0 0 32px -6px rgba(214,71,140,.65);
+}
+.s3d-fb:hover .s3d-face,.s3d-fb:focus-visible .s3d-face{
+  border-color:rgba(90,150,235,.65);color:#cfe2ff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 18px 26px -14px rgba(0,0,0,.95),0 0 32px -6px rgba(90,150,235,.65);
+}
+.s3d-wa:hover .s3d-face,.s3d-wa:focus-visible .s3d-face{
+  border-color:rgba(37,211,102,.6);color:#b7ffd4;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 18px 26px -14px rgba(0,0,0,.95),0 0 32px -6px rgba(37,211,102,.6);
+}
+.s3d-tt:hover .s3d-face,.s3d-tt:focus-visible .s3d-face{
+  border-color:rgba(255,255,255,.55);color:#fff;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 18px 26px -14px rgba(0,0,0,.95),0 0 32px -6px rgba(180,220,255,.55);
+}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+@media (max-width:1000px){
+  /* على الجوال: تظهر «تابعونا» أعلى قسم النص مباشرة تحت بطاقة العلامة */
+  .hero-copy{display:flex;flex-direction:column;align-items:center}
+  .hero-follow{order:-1;margin:0 0 1.7rem;align-items:center;width:100%}
+  .social3d{gap:.9rem;justify-content:center}
+  .s3d-face{width:52px;height:52px;border-radius:16px}
+}
+@media (max-width:420px){
+  .social3d{gap:.7rem}
+  .s3d-face{width:48px;height:48px;border-radius:15px}
+  .s3d-face svg{width:20px;height:20px}
+  .s3d-cap{font-size:.62rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-follow{animation:none}
+  .social3d,.s3d-face,.s3d-face svg{transition:none}
+  .s3d:hover .s3d-face{transform:none}
+}
