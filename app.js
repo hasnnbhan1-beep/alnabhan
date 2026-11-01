@@ -282,7 +282,17 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
   function renderGrid() {
     const list = visibleProducts();
+    const noneAtAll = (state.products || []).length === 0;
     $('#emptyState').hidden = list.length > 0;
+    if (list.length === 0) {
+      $('#emptyTitle').textContent = noneAtAll ? 'المتجر قيد التجهيز' : 'لا توجد منتجات مطابقة';
+      $('#emptyText').textContent = noneAtAll
+        ? 'أول المنتجات تُرفع قريباً — القطع تُختار وتُسعَّر من قِبل الإدارة فقط. تواصل معنا وسنخبرك فور وصول الجديد.'
+        : 'جرّب كلمة بحث أخرى أو اختر قسماً مختلفاً.';
+      $('#emptyWaLabel').textContent = noneAtAll ? 'راسلنا على واتساب' : 'اسألنا عن قطعة معينة';
+      const ew = $('#emptyWa');
+      if (ew) ew.href = waBase();
+    }
     $('#productGrid').innerHTML = list
       .map((p, i) => {
         const hasImg = !!(p.images && p.images[0]);
