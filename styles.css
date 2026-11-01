@@ -929,3 +929,8 @@ img.brand-mark{
   .channel-cta{width:100%}
   .channel-actions{width:100%}
 }
+
+/* بطاقة القسم الأخيرة إذا كان العدد فردياً — تمتد بعرض كامل على الجوال */
+@media (max-width:760px){
+  .cat-card:last-child:nth-child(odd){grid-column:1 / -1;aspect-ratio:16/9}
+}
