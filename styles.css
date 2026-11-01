@@ -1124,3 +1124,7 @@ img.brand-mark{
   .social3d,.s3d-face,.s3d-face svg{transition:none}
   .s3d:hover .s3d-face{transform:none}
 }
+
+/* صورة المشهد في الواجهة: تعبئة كاملة بالهوية */
+.stage-img img.brand-mark{object-fit:cover !important;padding:0;background:none}
+.stage-img img{transform:scale(1.01)}
