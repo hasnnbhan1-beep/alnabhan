@@ -38,7 +38,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   const PLACEHOLDER =
     'data:image/svg+xml;charset=utf-8,' +
     encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 100"><rect width="80" height="100" fill="#ece2d2"/><text x="40" y="54" font-size="10" fill="#b0a189" text-anchor="middle" font-family="sans-serif">لا صورة</text></svg>`
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 100"><rect width="80" height="100" fill="#1a0712"/><text x="40" y="54" font-size="10" fill="#c9d1db" text-anchor="middle" font-family="sans-serif">لا صورة</text></svg>`
     );
 
   function money(v) {

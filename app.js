@@ -12,7 +12,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   const PLACEHOLDER =
     'data:image/svg+xml;charset=utf-8,' +
     encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e3a2b"/><stop offset="1" stop-color="#040d0a"/></linearGradient></defs><rect width="300" height="400" fill="url(#g)"/><circle cx="150" cy="182" r="64" fill="none" stroke="#d9b46a" stroke-opacity=".38" stroke-width="1.2"/><path d="M129 210V154l42 56v-56" fill="none" stroke="#d9b46a" stroke-opacity=".85" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="150" y="262" font-family="Georgia,serif" font-size="13" letter-spacing="6" fill="#d9b46a" fill-opacity=".7" text-anchor="middle">NABHAN</text></svg>`
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3a0d1c"/><stop offset="1" stop-color="#0c0308"/></linearGradient></defs><rect width="300" height="400" fill="url(#g)"/><circle cx="150" cy="182" r="64" fill="none" stroke="#cfd7e0" stroke-opacity=".40" stroke-width="1.2"/><path d="M129 210V154l42 56v-56" fill="none" stroke="#eef2f7" stroke-opacity=".88" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="150" y="262" font-family="Georgia,serif" font-size="13" letter-spacing="6" fill="#cfd7e0" fill-opacity=".75" text-anchor="middle">NABHAN</text></svg>`
     );
 
   const state = {
