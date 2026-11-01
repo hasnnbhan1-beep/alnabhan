@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>أيقونة النبهان v4</title>
+<style>
+  @font-face{font-family:"TajawalX";src:url("/fonts/Tajawal-ExtraBold.ttf") format("truetype");font-weight:800}
+  @font-face{font-family:"Tajawal";src:url("/fonts/Tajawal-Bold.ttf") format("truetype");font-weight:700}
+  html,body{margin:0;padding:0;background:transparent}
+  body{display:grid;place-items:start}
+
+  /* ============ الثيمات ============ */
+  body{--bg1:#12324f;--bg2:#0a1a2b;--bg3:#040a12;--glow:rgba(88,152,220,.38);
+       --accent:#e8c887;--accent-2:#fff6e0;--soft:rgba(232,200,135,.16);
+       --line:rgba(232,200,135,.30);--ink:#f6efdd}
+  body[data-theme="emerald"]{--bg1:#0f3a2e;--bg2:#07231c;--bg3:#03110d;--glow:rgba(46,196,146,.34);
+       --accent:#e9d7a3;--accent-2:#fffaea;--soft:rgba(233,215,163,.16);
+       --line:rgba(233,215,163,.30);--ink:#f4f1e4}
+  body[data-theme="wine"]{--bg1:#3d1424;--bg2:#220a15;--bg3:#10050a;--glow:rgba(214,86,120,.34);
+       --accent:#f0cba9;--accent-2:#fff4e8;--soft:rgba(240,203,169,.16);
+       --line:rgba(240,203,169,.30);--ink:#f9eee4}
+  body[data-theme="platinum"]{--bg1:#22262c;--bg2:#12151a;--bg3:#05070a;--glow:rgba(186,204,228,.32);
+       --accent:#e6edf7;--accent-2:#ffffff;--soft:rgba(230,237,247,.16);
+       --line:rgba(230,237,247,.26);--ink:#eef2f8}
+
+  .icon{
+    position:relative;width:512px;height:512px;overflow:hidden;border-radius:116px;
+    background:
+      radial-gradient(120% 88% at 50% 4%,var(--bg1) 0%,var(--bg2) 44%,var(--bg3) 82%),
+      var(--bg3);
+    box-shadow:inset 0 0 0 2px var(--line);
+    isolation:isolate;
+  }
+  body.bleed .icon{border-radius:0}
+  .grid{
+    position:absolute;inset:0;opacity:.45;
+    background-image:
+      linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+    background-size:52px 52px;
+    -webkit-mask-image:radial-gradient(circle at 50% 38%,#000 4%,transparent 64%);
+    mask-image:radial-gradient(circle at 50% 38%,#000 4%,transparent 64%);
+  }
+  .glow{
+    position:absolute;left:50%;top:40%;width:470px;height:470px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,var(--glow),transparent 68%);
+  }
+  .ring{
+    position:absolute;left:50%;top:40%;width:346px;height:346px;transform:translate(-50%,-50%);
+    border-radius:50%;border:1px solid var(--line);opacity:.55;
+  }
+  .floor{
+    position:absolute;left:50%;bottom:66px;transform:translateX(-50%);
+    width:286px;height:1.5px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.65;
+  }
+
+  /* ============ المحتوى ============ */
+  .stack{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:perspective(1100px) rotateX(6deg);
+    padding:10px 0 2px;
+  }
+  .star{font-size:15px;line-height:1;color:var(--accent-2);margin-bottom:4px;
+        text-shadow:0 0 18px var(--glow)}
+  .name{
+    font-family:"TajawalX",sans-serif;font-weight:800;line-height:.9;
+    background:linear-gradient(180deg,var(--accent-2) 0%,var(--accent) 34%,#c9a05a 52%,var(--accent) 70%,var(--accent-2) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:
+      drop-shadow(0 1.4px 0 rgba(0,0,0,.55)) drop-shadow(0 2.8px 0 rgba(0,0,0,.5))
+      drop-shadow(0 4.2px 0 rgba(0,0,0,.45)) drop-shadow(0 6px 0 rgba(0,0,0,.4))
+      drop-shadow(0 12px 18px rgba(0,0,0,.6))
+      drop-shadow(0 0 26px var(--soft));
+  }
+  .divider{display:flex;align-items:center;gap:8px;margin:9px 0 7px;width:48%}
+  .divider i{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+  .divider b{font-size:8px;color:var(--accent);opacity:.9}
+  .sub{
+    font-family:"Tajawal",sans-serif;font-weight:700;line-height:1.1;color:var(--ink);
+    text-shadow:0 2px 6px rgba(0,0,0,.75),0 0 20px rgba(0,0,0,.5);
+  }
+  /* شريحة الرقم */
+  .phone{
+    display:flex;align-items:center;gap:7px;margin-top:12px;
+    padding:6px 14px;border-radius:100px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(37,211,102,.45);
+    box-shadow:0 6px 18px rgba(0,0,0,.45), 0 0 22px rgba(37,211,102,.14);
+    backdrop-filter:blur(6px);
+  }
+  .phone svg{color:#4ade80;flex:0 0 auto}
+  .phone span{
+    font-family:"Segoe UI",Tahoma,Arial,sans-serif;font-weight:700;
+    color:#eafff1;letter-spacing:.06em;direction:ltr;
+  }
+  .owner{
+    margin-top:8px;font-family:"Tajawal",sans-serif;font-weight:700;
+    color:var(--accent);opacity:.95;letter-spacing:.01em;
+    text-shadow:0 1px 4px rgba(0,0,0,.8);
+  }
+  body.compact .divider{margin:6px 0 5px;width:52%}
+</style>
+</head>
+<body>
+  <div class="icon">
+    <div class="grid"></div>
+    <div class="glow"></div>
+    <div class="ring"></div>
+    <div class="floor"></div>
+    <div class="stack">
+      <div class="star">✦</div>
+      <div class="name" id="name">النبهان</div>
+      <div class="divider"><i></i><b>✦</b><i></i></div>
+      <div class="sub" id="sub">للألبسة الأوروبية</div>
+      <div class="phone" id="phone">
+        <svg viewBox="0 0 32 32" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg>
+        <span id="phoneText">0968 866 704</span>
+      </div>
+      <div class="owner" id="owner">بإدارة عادل نبهان</div>
+    </div>
+  </div>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const W = 512;
+    const theme = params.get('theme');
+    if (theme) document.body.dataset.theme = theme;
+    if (params.get('bleed') === '1') document.body.classList.add('bleed');
+    const compact = params.get('compact') === '1';
+    if (compact) document.body.classList.add('compact');
+    const zoom = parseFloat(params.get('zoom') || '1');
+
+    const probe = document.createElement('span');
+    probe.style.cssText = 'position:fixed;top:-9999px;left:0;white-space:nowrap;display:inline-block;visibility:hidden;';
+    document.body.appendChild(probe);
+
+    function measure(text, family, weight, size) {
+      probe.style.fontFamily = family;
+      probe.style.fontWeight = weight;
+      probe.style.fontSize = size + 'px';
+      probe.textContent = text;
+      return probe.getBoundingClientRect().width || 1;
+    }
+    function fit(el, family, weight, text, ratio, max, min) {
+      let size = (100 * (W * ratio)) / measure(text, family, weight, 100);
+      if (max) size = Math.min(size, max);
+      if (min) size = Math.max(size, min);
+      el.style.fontSize = size.toFixed(2) + 'px';
+    }
+
+    function apply() {
+      const nameRatio = (compact ? 0.63 : 0.58) * zoom;
+      fit(document.getElementById('name'), 'TajawalX', '800', 'النبهان', nameRatio, compact ? 118 : 108);
+      fit(document.getElementById('sub'), 'Tajawal', '700', 'للألبسة الأوروبية', (compact ? 0.56 : 0.48) * zoom, compact ? 40 : 30);
+      document.getElementById('phone').style.fontSize = (compact ? 20 : 21) * zoom + 'px';
+      document.getElementById('phoneText').style.fontSize = (compact ? 20 : 21) * zoom + 'px';
+      document.getElementById('owner').style.fontSize = (compact ? 17 : 19) * zoom + 'px';
+      document.getElementById('stack').style.transform =
+        'perspective(1100px) rotateX(6deg)' + (zoom !== 1 ? ' scale(' + zoom + ')' : '');
+    }
+
+    apply();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
+  })();
+</script>
+</body>
+</html>

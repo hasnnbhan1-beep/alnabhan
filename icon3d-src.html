@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>أيقونة النبهان 3D</title>
+<style>
+  @font-face{font-family:"TajawalX";src:url("/fonts/Tajawal-ExtraBold.ttf") format("truetype");font-weight:800}
+  @font-face{font-family:"Tajawal";src:url("/fonts/Tajawal-Bold.ttf") format("truetype");font-weight:700}
+  html,body{margin:0;padding:0;background:transparent}
+  body{display:grid;place-items:start}
+  .icon{
+    position:relative;width:512px;height:512px;overflow:hidden;border-radius:116px;
+    background:
+      radial-gradient(115% 85% at 50% 6%,#3d2f1b 0%,#1c160f 40%,#0a0806 76%),
+      #080706;
+    box-shadow:inset 0 0 0 2px rgba(240,214,160,.13);
+    isolation:isolate;
+  }
+  body.bleed .icon{border-radius:0}
+  /* شبكة خفيفة */
+  .grid{
+    position:absolute;inset:0;opacity:.5;
+    background-image:
+      linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(circle at 50% 40%,#000 6%,transparent 66%);
+    -webkit-mask-image:radial-gradient(circle at 50% 40%,#000 6%,transparent 66%);
+  }
+  .glow{
+    position:absolute;left:50%;top:43%;width:470px;height:470px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(230,190,118,.34),rgba(170,124,56,.09) 46%,transparent 70%);
+  }
+  .ring{
+    position:absolute;left:50%;top:43%;width:360px;height:360px;transform:translate(-50%,-50%);
+    border-radius:50%;border:1px solid rgba(242,218,168,.10);
+  }
+  /* هالة خلفية */
+  /* أرضية مضيئة */
+  .floor{
+    position:absolute;left:50%;bottom:74px;transform:translateX(-50%);
+    width:300px;height:1.5px;
+    background:linear-gradient(90deg,transparent,rgba(246,226,182,.8),transparent);
+  }
+  .floor::after{
+    content:"";position:absolute;left:50%;top:-4px;transform:translateX(-50%);
+    width:240px;height:30px;
+    background:radial-gradient(ellipse at center,rgba(230,190,118,.4),transparent 72%);
+    filter:blur(7px);
+  }
+  /* النص */
+  .stack{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:perspective(1100px) rotateX(6deg);
+    padding-bottom:26px;
+  }
+  .star{
+    font-size:17px;line-height:1;color:#f8ead0;margin-bottom:6px;
+    text-shadow:0 0 18px rgba(246,226,182,.95);
+  }
+  .name{
+    position:relative;font-family:"TajawalX",sans-serif;font-weight:800;line-height:.92;
+    background:linear-gradient(180deg,#fffdf2 0%,#f8e9c4 20%,#efd6a4 38%,#dcb375 54%,#c0914c 64%,#e8ce9a 80%,#fffaea 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:
+      drop-shadow(0 1.6px 0 #7c5a21) drop-shadow(0 3.2px 0 #6d4e1c)
+      drop-shadow(0 4.8px 0 #5e4317) drop-shadow(0 6.4px 0 #4f3812)
+      drop-shadow(0 9px 0 #412c0e)
+      drop-shadow(0 16px 20px rgba(0,0,0,.72))
+      drop-shadow(0 0 26px rgba(230,190,118,.3));
+  }
+  .divider{display:flex;align-items:center;gap:9px;margin:12px 0 9px;width:50%}
+  .divider i{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(242,218,168,.8),transparent)}
+  .divider b{font-size:9px;color:#f4e2b8;text-shadow:0 0 10px rgba(246,226,182,.8)}
+  .sub{
+    font-family:"Tajawal",sans-serif;font-weight:700;font-size:30px;line-height:1.1;
+    color:#f8f0de;white-space:nowrap;
+    text-shadow:0 2px 0 rgba(92,66,26,.85),0 7px 16px rgba(0,0,0,.72),0 0 24px rgba(230,190,118,.32);
+  }
+  body.compact .latin{display:none}
+  body.compact .divider{width:54%;margin:9px 0 8px}
+  .latin{
+    margin-top:12px;font-family:Georgia,serif;font-size:11px;letter-spacing:.5em;
+    color:rgba(242,218,168,.85);text-indent:.5em;
+    text-shadow:0 0 14px rgba(230,190,118,.55);
+  }
+</style>
+</head>
+<body>
+  <div class="icon">
+    <div class="grid"></div>
+    <div class="glow"></div>
+    <div class="ring"></div>
+    <div class="floor"></div>
+    <div class="stack" id="stack">
+      <div class="star">✦</div>
+      <div class="name" id="name">النبهان</div>
+      <div class="divider"><i></i><b>✦</b><i></i></div>
+      <div class="sub" id="sub">للألبسة الأوروبية</div>
+      <div class="latin">AL NABHAN</div>
+    </div>
+  </div>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const W = 512;
+
+    // عنصر قياس خارج تدفق الصفحة (يقيس العرض الحقيقي للنص)
+    const probe = document.createElement('span');
+    probe.style.cssText =
+      'position:fixed;top:-9999px;left:0;white-space:nowrap;display:inline-block;visibility:hidden;';
+    document.body.appendChild(probe);
+
+    function measure(text, family, weight, size) {
+      probe.style.fontFamily = family;
+      probe.style.fontWeight = weight;
+      probe.style.fontSize = size + 'px';
+      probe.textContent = text;
+      return probe.getBoundingClientRect().width || 1;
+    }
+
+    function fit(el, family, weight, text, targetRatio, maxSize) {
+      const target = W * targetRatio;
+      let size = (100 * target) / measure(text, family, weight, 100);
+      if (maxSize) size = Math.min(size, maxSize);
+      el.style.fontSize = size.toFixed(2) + 'px';
+      return { size: +size.toFixed(1), width: Math.round(el.getBoundingClientRect().width) };
+    }
+
+    if (params.get('bleed') === '1') document.body.classList.add('bleed');
+    const compact = params.get('compact') === '1';
+    if (compact) document.body.classList.add('compact');
+    const zoom = parseFloat(params.get('zoom') || '1');
+
+    function apply() {
+      const nameEl = document.getElementById('name');
+      const subEl = document.getElementById('sub');
+      nameEl.style.fontSize = '100px';
+      subEl.style.fontSize = '30px';
+      const nameRatio = (compact ? 0.66 : 0.62) * zoom;
+      const subRatio = (compact ? 0.60 : 0.54) * zoom;
+      const a = fit(nameEl, 'TajawalX', '800', 'النبهان', nameRatio, compact ? 120 : 112);
+      const b = fit(subEl, 'Tajawal', '700', 'للألبسة الأوروبية', subRatio, compact ? 44 : 36);
+      document.getElementById('stack').style.transform =
+        'perspective(1100px) rotateX(6deg)' + (zoom !== 1 ? ' scale(' + zoom + ')' : '');
+      document.title = 'icon ';
+      window.__iconInfo = { name: a, sub: b };
+    }
+
+    apply();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        apply();
+        window.__ready = true;
+      });
+    } else {
+      window.__ready = true;
+    }
+  })();
+</script>
+</body>
+</html>

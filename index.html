@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>النبهان للألبسة الأوروبية | أزياء أوروبية أصيلة</title>
+<meta name="description" content="متجر النبهان للألبسة الأوروبية الأصلية — نسائي، رجالي، أطفال وإكسسوارات. اطلب مباشرة عبر واتساب." />
+<meta name="theme-color" content="#04100c" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="النبهان للألبسة الأوروبية" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="icon-180.png" />
+<link rel="icon" type="image/png" href="mark-192.png" />
+<link rel="preload" as="image" href="uploads/hero.jpg" fetchpriority="high" />
+<link rel="preload" as="font" type="font/ttf" href="fonts/Tajawal-ExtraBold.ttf" crossorigin />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body class="loading">
+
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+<div class="preloader" id="preloader">
+  <div class="pre-mark"><img src="mark-192.png" alt="النبهان" /></div>
+  <p>النبهان</p>
+</div>
+
+<!-- ===================== شريط الإعلان ===================== -->
+<div class="announce" id="announce" role="note">
+  <div class="announce-track"><span id="announceText">توصيل إلى جميع المحافظات • الدفع عند الاستلام</span></div>
+</div>
+
+<!-- ===================== الترويسة ===================== -->
+<header class="header" id="header">
+  <div class="header-inner">
+    <button class="icon-btn only-mobile" id="menuBtn" aria-label="القائمة">
+      <svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+    </button>
+
+    <a class="logo" href="#" aria-label="النبهان">
+      <span class="logo-mark"><img src="mark-192.png" alt="" /></span>
+      <span class="logo-copy">
+        <span class="logo-ar" id="brandName">النبهان</span>
+        <span class="logo-en" id="brandLatin">AL NABHAN</span>
+      </span>
+    </a>
+
+    <nav class="nav" id="mainNav">
+      <a href="#products" class="nav-link active" data-cat="all">كل المنتجات</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="بحث">
+        <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+      <button class="install-btn" id="installBtn" hidden>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 20h14" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>ثبّت التطبيق</span>
+      </button>
+      <button class="icon-btn cart-btn" id="cartBtn" aria-label="سلة الطلبات">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 7h12l-1.2 12.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 7Z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M9 7V5.6A3 3 0 0 1 12 2.6a3 3 0 0 1 3 3V7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+        <span class="cart-count" id="cartCount" hidden>0</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="search-bar" id="searchBar" hidden>
+    <div class="search-inner">
+      <svg viewBox="0 0 24 24" width="18" height="18" class="search-ico"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input id="searchInput" type="search" placeholder="ابحث عن منتج، رمز، أو قسم…" autocomplete="off" />
+      <button class="search-close" id="searchClose" aria-label="إغلاق">✕</button>
+    </div>
+  </div>
+</header>
+
+<!-- قائمة الجوال -->
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <div class="mobile-menu-panel">
+    <div class="mobile-menu-head">
+      <span class="logo-ar">النبهان</span>
+      <button class="search-close" id="mobileMenuClose" aria-label="إغلاق">✕</button>
+    </div>
+    <a href="#products" data-cat="all">كل المنتجات</a>
+    <div id="mobileCats"></div>
+    <a href="#about">عن المتجر</a>
+    <a href="#contact">تواصل معنا</a>
+  </div>
+</div>
+
+<main>
+  <!-- ===================== الواجهة الرئيسية ===================== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <img id="heroImg" src="uploads/hero.jpg" alt="متجر النبهان للألبسة الأوروبية" fetchpriority="high" decoding="async" />
+      <div class="hero-scrim"></div>
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="hero-grid"></div>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="hero-kicker"><span class="dot"></span><span id="heroKicker">مجموعة خريف وشتاء 2026</span></p>
+        <h1 class="hero-title">
+          <span id="heroTitle">أناقة أوروبية</span>
+          <em id="heroAccent">بلمسة شرقية</em>
+        </h1>
+        <p class="hero-sub" id="heroSub">قطع مختارة بعناية من أرقى دور الأزياء الأوروبية.</p>
+        <div class="hero-cta">
+          <a href="#products" class="btn btn-gold" id="heroCta">تسوّق المجموعة</a>
+          <a href="#" class="btn btn-glass" id="heroWhats">
+            <svg viewBox="0 0 32 32" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg>
+            استفسر عبر واتساب
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><b>100%</b><span>خامات أوروبية</span></div>
+          <div class="hstat"><b>2–4</b><span>أيام توصيل</span></div>
+          <div class="hstat"><b>3</b><span>أيام استبدال</span></div>
+        </div>
+      </div>
+
+      <div class="hero-art">
+        <div class="stage">
+          <div class="stage-ring"></div>
+          <div class="stage-card" id="stageCard">
+            <div class="stage-img"><img src="uploads/p1.jpg" alt="" id="stageImg" /></div>
+            <div class="stage-shine"></div>
+          </div>
+          <div class="float-chip chip-a"><span class="chip-ico">✦</span> قطع مختارة بعناية</div>
+          <div class="float-chip chip-b">
+            <span class="chip-ico wa"><svg viewBox="0 0 32 32" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg></span>
+            <span>اطلب عبر واتساب<br /><small>بضغطة واحدة</small></span>
+          </div>
+          <div class="float-chip chip-c">الدفع عند الاستلام</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>اكتشف</span>
+      <span class="scroll-line"></span>
+    </div>
+  </section>
+
+  <!-- ===================== شريط متحرك ===================== -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>جودة أوروبية</span><i>✦</i><span>الدفع عند الاستلام</span><i>✦</i><span>توصيل لكل المحافظات</span><i>✦</i>
+      <span>استبدال خلال 3 أيام</span><i>✦</i><span>طلب مباشر عبر واتساب</span><i>✦</i>
+      <span>جودة أوروبية</span><i>✦</i><span>الدفع عند الاستلام</span><i>✦</i><span>توصيل لكل المحافظات</span><i>✦</i>
+      <span>استبدال خلال 3 أيام</span><i>✦</i><span>طلب مباشر عبر واتساب</span><i>✦</i>
+    </div>
+  </div>
+
+  <!-- ===================== شريط الثقة ===================== -->
+  <section class="features" id="features">
+    <div class="wrap features-grid" id="featuresGrid"></div>
+  </section>
+
+  <!-- ===================== الأقسام ===================== -->
+  <section class="section" id="categories">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">تسوّق حسب القسم</p>
+        <h2 class="section-title">مجموعاتنا</h2>
+        <p class="section-sub">أربع مجموعات، كل قطعة فيها مختارة بذوق واحد.</p>
+      </div>
+      <div class="cat-grid reveal" id="catGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===================== المنتجات ===================== -->
+  <section class="section section-products" id="products">
+    <div class="wrap">
+      <div class="section-head section-head-row reveal">
+        <div>
+          <p class="eyebrow">وصل حديثاً</p>
+          <h2 class="section-title">مختارات النبهان</h2>
+        </div>
+        <div class="sort-wrap">
+          <label for="sortSelect" class="sr-only">ترتيب</label>
+          <select id="sortSelect">
+            <option value="new">الأحدث</option>
+            <option value="price-asc">السعر: من الأقل</option>
+            <option value="price-desc">السعر: من الأعلى</option>
+            <option value="name">الاسم (أ-ي)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="chips reveal" id="filterChips"></div>
+      <div class="grid" id="productGrid"></div>
+      <p class="empty" id="emptyState" hidden>لا توجد منتجات مطابقة. جرّب كلمة بحث أخرى أو اختر قسماً مختلفاً.</p>
+    </div>
+  </section>
+
+  <!-- ===================== عن المتجر ===================== -->
+  <section class="about" id="about">
+    <div class="wrap about-grid">
+      <div class="about-media reveal">
+        <div class="about-frame">
+          <img src="uploads/p7.jpg" alt="خامات النبهان" loading="lazy" />
+        </div>
+        <div class="about-badge">
+          <b>+1200</b>
+          <span>زبون سعيد</span>
+        </div>
+      </div>
+      <div class="about-text reveal">
+        <p class="eyebrow">عن النبهان</p>
+        <h2 class="section-title">الجودة تُختار،<br />لا تُصادف</h2>
+        <p id="aboutText">«النبهان» بيت أزياء متخصص بالألبسة الأوروبية الأصلية.</p>
+        <ul class="about-list">
+          <li><span></span> قطع أصلية مستوردة من موردين موثوقين</li>
+          <li><span></span> مقاسات دقيقة وخامات مفحوصة قطعة قطعة</li>
+          <li><span></span> طلب واحد عبر واتساب — بلا تسجيل ولا تعقيد</li>
+        </ul>
+        <a href="#" class="btn btn-gold" id="aboutWhats">تواصل معنا الآن</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== دعوة للطلب ===================== -->
+  <section class="cta-band">
+    <div class="wrap cta-band-inner reveal">
+      <div>
+        <h3>جاهز لطلبك؟</h3>
+        <p>اختر قطعتك، أرسل الطلب على واتساب، ونحن نتولّى الباقي.</p>
+      </div>
+      <a href="#" class="btn btn-dark" id="bandWhats">
+        <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Z"/></svg>
+        اطلب عبر واتساب
+      </a>
+    </div>
+  </section>
+</main>
+
+<!-- ===================== التذييل ===================== -->
+<footer class="footer" id="contact">
+  <div class="wrap footer-grid">
+    <div>
+      <div class="logo logo-foot">
+        <span class="logo-mark"><img src="mark-192.png" alt="" /></span>
+        <span class="logo-copy">
+          <span class="logo-ar">النبهان</span>
+          <span class="logo-en">AL NABHAN</span>
+        </span>
+      </div>
+      <p class="footer-tag" id="footerTag">أزياء أوروبية أصيلة — مختارة بعناية.</p>
+      <div class="social" id="socialLinks"></div>
+    </div>
+    <div>
+      <h4>التسوق</h4>
+      <ul id="footerCats"></ul>
+    </div>
+    <div>
+      <h4>المساعدة</h4>
+      <ul>
+        <li><a href="#" data-help="delivery">التوصيل والأجور</a></li>
+        <li><a href="#" data-help="exchange">الاستبدال والإرجاع</a></li>
+        <li><a href="#" data-help="sizes">دليل المقاسات</a></li>
+        <li><a href="admin" class="owner-link">تطبيق المالك</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>تواصل معنا</h4>
+      <ul class="contact-list">
+        <li class="contact-wa">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 3a9 9 0 0 0-7.7 13.6L3 21l4.5-1.2A9 9 0 1 0 12 3Z" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+          <span class="contact-wa-copy">
+            <a href="#" id="footWhats">واتساب <b id="footNumber" dir="ltr">0968 866 704</b></a>
+            <small id="ownerLine">بإدارة عادل نبهان</small>
+          </span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          <span id="footHours">يومياً 10 ص — 9 م</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11Z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+          <span>دمشق — سوريا</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© <span id="year"></span> النبهان للألبسة الأوروبية — <span id="ownerLine2">بإدارة عادل نبهان</span>.</span>
+    <span class="footer-note">تطبيق تسوّق ذكي — صُنع بعناية.</span>
+  </div>
+</footer>
+
+<!-- ===================== زر واتساب العائم ===================== -->
+<a class="wa-float" id="waFloat" href="#" aria-label="تواصل عبر واتساب">
+  <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+    <path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/>
+  </svg>
+</a>
+
+<!-- ===================== شريط التطبيق (جوال) ===================== -->
+<nav class="appbar" aria-label="تنقّل التطبيق">
+  <button class="appbar-item active" id="appHome">
+    <svg viewBox="0 0 24 24" width="21" height="21"><path d="m4 10 8-6 8 6v10H4z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>
+    <span>الرئيسية</span>
+  </button>
+  <button class="appbar-item" id="appProducts">
+    <svg viewBox="0 0 24 24" width="21" height="21"><path d="M5 8h14l-1 12H6L5 8Z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M9 8V6a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    <span>المنتجات</span>
+  </button>
+  <button class="appbar-item appbar-wa" id="appWa">
+    <svg viewBox="0 0 32 32" width="24" height="24"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Z"/></svg>
+    <span>واتساب</span>
+  </button>
+  <button class="appbar-item" id="appCart">
+    <svg viewBox="0 0 24 24" width="21" height="21"><path d="M6 7h12l-1.2 12.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 7Z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M9 7V5.6A3 3 0 0 1 12 2.6a3 3 0 0 1 3 3V7" stroke="currentColor" stroke-width="1.6" fill="none"/></svg>
+    <span>السلة</span>
+    <i class="appbar-dot" id="appCartDot" hidden></i>
+  </button>
+</nav>
+
+<!-- ===================== سلة الطلبات ===================== -->
+<div class="drawer-scrim" id="drawerScrim" hidden></div>
+<aside class="drawer" id="cartDrawer" hidden aria-label="سلة الطلبات">
+  <div class="drawer-head">
+    <h3>سلة الطلبات <span id="cartHeadCount"></span></h3>
+    <button class="search-close" id="cartClose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="drawer-body" id="cartItems"></div>
+  <div class="drawer-foot" id="cartFoot" hidden>
+    <div class="cart-total-row">
+      <span>الإجمالي التقديري</span>
+      <strong id="cartTotal">0</strong>
+    </div>
+    <p class="cart-note" id="cartNote">أجور التوصيل تُحدد حسب المنطقة.</p>
+    <button class="btn btn-gold btn-block" id="checkoutBtn">إتمام الطلب عبر واتساب</button>
+    <button class="link-btn" id="clearCart">تفريغ السلة</button>
+  </div>
+</aside>
+
+<!-- ===================== نافذة المنتج ===================== -->
+<div class="modal" id="productModal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="تفاصيل المنتج">
+    <button class="modal-close" id="modalClose" aria-label="إغلاق">✕</button>
+    <div class="modal-grid">
+      <div class="pdp-media">
+        <div class="pdp-main" id="pdpMain"></div>
+        <div class="pdp-thumbs" id="pdpThumbs"></div>
+      </div>
+      <div class="pdp-info">
+        <p class="pdp-cat" id="pdpCat"></p>
+        <h2 class="pdp-title" id="pdpTitle"></h2>
+        <div class="pdp-price-row">
+          <span class="pdp-price" id="pdpPrice"></span>
+          <span class="pdp-old" id="pdpOld"></span>
+          <span class="pdp-badge" id="pdpBadge" hidden></span>
+        </div>
+        <p class="pdp-desc" id="pdpDesc"></p>
+
+        <div class="opt-block" id="sizeBlock">
+          <div class="opt-head"><span>المقاس</span><button class="link-btn" data-help="sizes">دليل المقاسات</button></div>
+          <div class="opt-list" id="pdpSizes"></div>
+        </div>
+
+        <div class="opt-block" id="colorBlock">
+          <div class="opt-head"><span>اللون: <b id="colorName"></b></span></div>
+          <div class="opt-list" id="pdpColors"></div>
+        </div>
+
+        <div class="opt-block">
+          <div class="opt-head"><span>الكمية</span></div>
+          <div class="qty">
+            <button type="button" id="qtyMinus" aria-label="تقليل">−</button>
+            <input id="pdpQty" type="number" value="1" min="1" max="20" inputmode="numeric" />
+            <button type="button" id="qtyPlus" aria-label="زيادة">+</button>
+          </div>
+        </div>
+
+        <div class="pdp-actions">
+          <a class="btn btn-gold btn-block" id="pdpWhats" href="#" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Z"/></svg>
+            <span id="pdpWhatsLabel">اطلب الآن عبر واتساب</span>
+          </a>
+          <button class="btn btn-glass btn-block" id="pdpAdd">أضف إلى السلة</button>
+        </div>
+        <ul class="pdp-perks">
+          <li>الدفع عند الاستلام</li>
+          <li>توصيل 2–4 أيام</li>
+          <li>استبدال خلال 3 أيام</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== نافذة إتمام الطلب ===================== -->
+<div class="modal" id="checkoutModal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-card modal-small" role="dialog" aria-modal="true" aria-label="معلومات الطلب">
+    <button class="modal-close" id="checkoutClose" aria-label="إغلاق">✕</button>
+    <div class="checkout-body">
+      <p class="eyebrow">الخطوة الأخيرة</p>
+      <h2 class="section-title">معلومات التوصيل</h2>
+      <p class="checkout-sub">سنفتح واتساب برسالة جاهزة تحتوي طلبك — راجعها وأرسلها فقط.</p>
+      <form id="checkoutForm" class="form">
+        <div class="field">
+          <label for="custName">الاسم الكامل *</label>
+          <input id="custName" name="name" required autocomplete="name" placeholder="مثال: أحمد النبهان" />
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="custCity">المدينة *</label>
+            <input id="custCity" name="city" required placeholder="دمشق" />
+          </div>
+          <div class="field">
+            <label for="custPhone">رقم هاتفك</label>
+            <input id="custPhone" name="phone" inputmode="tel" placeholder="09xxxxxxxx" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="custAddress">العنوان بالتفصيل</label>
+          <input id="custAddress" name="address" placeholder="الحي، الشارع، أقرب معلم" />
+        </div>
+        <div class="field">
+          <label for="custNotes">ملاحظات</label>
+          <textarea id="custNotes" name="notes" rows="2" placeholder="أي تفاصيل إضافية…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-gold btn-block">إرسال الطلب على واتساب</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== نافذة معلومات مساعدة ===================== -->
+<div class="modal" id="infoModal" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="modal-card modal-small" role="dialog" aria-modal="true">
+    <button class="modal-close" id="infoClose" aria-label="إغلاق">✕</button>
+    <div class="checkout-body">
+      <h2 class="section-title" id="infoTitle"></h2>
+      <div id="infoBody" class="info-body"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

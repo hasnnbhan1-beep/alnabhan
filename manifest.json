@@ -1,0 +1,60 @@
+{
+  "name": "النبهان للألبسة الأوروبية",
+  "short_name": "النبهان",
+  "description": "متجر النبهان للألبسة الأوروبية الأصلية — اطلب مباشرة عبر واتساب.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#04100c",
+  "theme_color": "#04100c",
+  "categories": [
+    "shopping",
+    "lifestyle",
+    "fashion"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "المنتجات",
+      "url": "/#products",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "تطبيق المالك",
+      "url": "/admin",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

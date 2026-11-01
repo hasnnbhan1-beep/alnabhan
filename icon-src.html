@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<title>أيقونة النبهان</title>
+<style>
+  html,body{margin:0;padding:0;background:transparent}
+  .icon{width:512px;height:512px;display:block}
+</style>
+</head>
+<body>
+<svg class="icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#14304b" data-bg="1"/>
+      <stop offset="55%" stop-color="#081420" data-bg="2"/>
+      <stop offset="100%" stop-color="#050d15" data-bg="3"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6e3b4"/>
+      <stop offset="38%" stop-color="#d9b46a"/>
+      <stop offset="66%" stop-color="#a97f37"/>
+      <stop offset="100%" stop-color="#e8cd93"/>
+    </linearGradient>
+    <linearGradient id="goldSoft" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a97f37"/>
+      <stop offset="100%" stop-color="#f2ddb0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="38%" r="58%">
+      <stop offset="0%" stop-color="#d9b46a" stop-opacity=".55"/>
+      <stop offset="100%" stop-color="#d9b46a" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="9"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="116" fill="url(#bg)"/>
+  <circle cx="256" cy="196" r="196" fill="url(#glow)"/>
+
+  <!-- قوس معماري -->
+  <path d="M118 388V214a138 138 0 0 1 276 0v174" fill="none" stroke="url(#goldSoft)" stroke-opacity=".5" stroke-width="3"/>
+  <path d="M140 388V216a116 116 0 0 1 232 0v172" fill="none" stroke="url(#goldSoft)" stroke-opacity=".22" stroke-width="1.6"/>
+
+  <!-- المونوغرام -->
+  <g filter="url(#soft)" opacity=".45">
+    <path d="M196 330V182l120 148V182" fill="none" stroke="#d9b46a" stroke-width="26" stroke-linecap="square"/>
+  </g>
+  <path d="M196 330V182l120 148V182" fill="none" stroke="url(#gold)" stroke-width="22" stroke-linejoin="miter" stroke-linecap="square"/>
+
+  <!-- نجمة صغيرة -->
+  <path d="M256 96l7.5 20.5L284 124l-20.5 7.5L256 152l-7.5-20.5L228 124l20.5-7.5z" fill="url(#gold)"/>
+
+  <!-- خط فاصل ونص -->
+  <path d="M196 366h120" stroke="url(#goldSoft)" stroke-opacity=".65" stroke-width="2"/>
+  <text x="256" y="404" text-anchor="middle" font-family="Georgia,serif" font-size="23"
+        letter-spacing="9" fill="#e8cd93" opacity=".92">NABHAN</text>
+</svg>
+<script>
+  // دعم الثيمات: ?theme=navy|emerald|wine|platinum
+  const T = {
+    navy:     ['#14304b', '#081420', '#050d15'],
+    emerald:  ['#12463a', '#07231c', '#03110d'],
+    wine:     ['#4a1a2c', '#220a15', '#10050a'],
+    platinum: ['#2c3138', '#12151a', '#05070a']
+  };
+  const t = new URLSearchParams(location.search).get('theme') || 'navy';
+  const pal = T[t] || T.navy;
+  document.querySelectorAll('[data-bg]').forEach(el => {
+    el.setAttribute('stop-color', pal[Number(el.dataset.bg) - 1]);
+  });
+</script>
+</body>
+</html>
