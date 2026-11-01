@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <link rel="apple-touch-icon" href="icon-180.png" />
 <link rel="icon" type="image/png" href="mark-192.png" />
-<link rel="stylesheet" href="admin.css?v=4.2" />
+<link rel="stylesheet" href="admin.css?v=4.8" />
 </head>
 <body>
 
@@ -175,6 +175,12 @@
             <div class="field"><label>الرقم كما يظهر للزبائن</label><input name="phoneDisplay" placeholder="0968 866 704" /></div>
             <div class="field"><label>ساعات العمل</label><input name="workingHours" /></div>
             <div class="field"><label>اسم المالك (يظهر بجانب رقم الواتساب)</label><input name="ownerName" placeholder="بإدارة عادل نبهان" /></div>
+            <div class="field"><label>العنوان (يظهر في التذييل)</label><input name="address" placeholder="ريف إدلب — قرية زردنا" /></div>
+          </div>
+          <div class="field">
+            <label>📣 رابط قناة واتساب الرسمية</label>
+            <input name="channel" dir="ltr" placeholder="https://whatsapp.com/channel/0029..." />
+            <span class="field-hint">يظهر كقسم بارز في الصفحة الرئيسية + في التذييل + داخل رسالة «المتجر قيد التجهيز». اتركه فارغاً لإخفاء كل أزرار القناة.</span>
           </div>
           <div class="field"><label>الشريط الإعلاني العلوي</label><input name="announcement" /></div>
         </div>
@@ -355,7 +361,7 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="admin.js?v=4.2"></script>
+<script src="admin.js?v=4.8"></script>
 <script>
   // رابط المتجر — يعمل على أي استضافة (جذر أو مجلد فرعي)
   (function initStoreUrl() {

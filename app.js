@@ -124,6 +124,32 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     setTimeout(finishBoot, 400);
   }
 
+
+  /* ----------------------- قناة واتساب ----------------------- */
+  function applyChannel(url) {
+    const ok = /^https?:\/\//i.test(url || '');
+    const band = $('#channelBand');
+    if (band) band.hidden = !ok;
+    ['#channelBtn', '#footChannel', '#emptyChannel'].forEach((sel) => {
+      const el = $(sel);
+      if (!el) return;
+      if (ok) el.href = url;
+      el.hidden = !ok;
+    });
+    // الرابط داخل رسالة «المتجر قيد التجهيز» يحتاج إظهاراً فقط إذا وُجد
+    const ec = $('#emptyChannel');
+    if (ec) ec.hidden = !ok;
+    const note = $('#channelNote');
+    if (note && ok) {
+      try {
+        const u = new URL(url);
+        note.textContent = u.hostname.replace('www.', '') + ' — بدون تسجيل';
+      } catch {
+        note.textContent = '';
+      }
+    }
+  }
+
   /* ----------------------- تطبيق الإعدادات ----------------------- */
   function applySettings() {
     const s = state.settings;
@@ -140,6 +166,12 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     $('#heroImg').src = s.hero.image || '/uploads/hero.jpg';
     $('#aboutText').textContent = s.about || '';
     $('#footerTag').textContent = s.tagline || '';
+    // العنوان
+    const addrEl = $('#footAddress');
+    if (addrEl) addrEl.textContent = s.address || 'ريف إدلب — قرية زردنا';
+    // قناة واتساب
+    const ch = (s.channel || '').trim();
+    applyChannel(ch);
     $('#footHours').textContent = s.workingHours || '';
     const ownerTxt = s.ownerName || '';
     ['ownerLine', 'ownerLine2'].forEach((id) => {

@@ -879,3 +879,53 @@ img.brand-mark{
   background:radial-gradient(circle at 50% 40%,rgba(16,94,72,.55),rgba(4,16,12,.96) 70%);
 }
 .about-frame img.brand-mark{padding:12%}
+
+/* ======================= قناة واتساب ======================= */
+.channel-band{padding:.2rem 0 1rem}
+.channel-inner{
+  position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:1.4rem;
+  padding:1.7rem 1.9rem;border-radius:calc(var(--radius) + 6px);overflow:hidden;
+  background:
+    radial-gradient(120% 160% at 88% 0%,rgba(37,211,102,.22),transparent 58%),
+    linear-gradient(135deg,#0a2a20,#071612 65%);
+  border:1px solid rgba(37,211,102,.32);
+  box-shadow:0 22px 60px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.channel-glow{
+  position:absolute;width:340px;height:340px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(37,211,102,.28),transparent 66%);
+  inset-inline-end:-120px;top:-140px;
+}
+.channel-badge{
+  position:relative;display:grid;place-items:center;width:74px;height:74px;border-radius:24px;
+  color:#eafff2;background:linear-gradient(150deg,#2be36f,#12924a);
+  box-shadow:0 16px 34px rgba(18,146,74,.45),inset 0 1px 0 rgba(255,255,255,.35);
+}
+.channel-copy{position:relative;min-width:0}
+.channel-eyebrow{font-size:.72rem;font-weight:800;letter-spacing:.14em;color:#7bf0a8;margin-bottom:.35rem}
+.channel-title{font-family:var(--font-ar);font-size:1.32rem;font-weight:800;color:var(--text);line-height:1.4}
+.channel-sub{margin-top:.4rem;font-size:.88rem;line-height:1.8;color:var(--muted);max-width:60ch}
+.channel-points{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+.channel-points li{
+  font-size:.72rem;font-weight:700;color:#bff5d3;padding:.32rem .7rem;border-radius:100px;
+  background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.26);
+}
+.channel-actions{display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.btn-wa{
+  background:linear-gradient(135deg,#33e07a,#128a46);color:#03200f;font-weight:800;
+  border:1px solid rgba(255,255,255,.16);box-shadow:0 14px 34px rgba(18,138,70,.4);
+}
+.btn-wa:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(18,138,70,.5);color:#03200f}
+.channel-cta{white-space:nowrap}
+.channel-note{font-size:.7rem;color:var(--muted-2);direction:ltr}
+.foot-channel{color:#69e69b !important}
+.empty-cta2{margin-top:.2rem}
+
+@media (max-width:860px){
+  .channel-inner{grid-template-columns:1fr;gap:1rem;padding:1.4rem 1.2rem;text-align:center;justify-items:center}
+  .channel-badge{width:62px;height:62px;border-radius:20px}
+  .channel-title{font-size:1.14rem}
+  .channel-points{justify-content:center}
+  .channel-cta{width:100%}
+  .channel-actions{width:100%}
+}

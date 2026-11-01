@@ -870,6 +870,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     set('phoneDisplay', s.phoneDisplay);
     set('workingHours', s.workingHours);
     set('ownerName', s.ownerName);
+    set('address', s.address);
+    set('channel', s.channel);
     set('announcement', s.announcement);
     set('currencySymbol', s.currency.symbol);
     set('currencyCode', s.currency.code);
@@ -919,6 +921,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       phoneDisplay: g('phoneDisplay'),
       workingHours: g('workingHours'),
       ownerName: g('ownerName'),
+      address: g('address'),
+      channel: f.elements.channel ? g('channel') : undefined,
       announcement: g('announcement'),
       currency: {
         symbol: g('currencySymbol'),
