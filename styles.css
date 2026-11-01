@@ -941,3 +941,30 @@ img.brand-mark{
 @media (max-width:760px){
   .cat-card:last-child:nth-child(odd){grid-column:1 / -1;aspect-ratio:16/9}
 }
+
+/* ======================= متانة الشبكة ======================= */
+.net-banner{
+  position:relative;z-index:40;display:flex;align-items:center;justify-content:center;gap:.7rem;flex-wrap:wrap;
+  padding:.65rem 1rem;font-size:.8rem;font-weight:600;text-align:center;
+  background:linear-gradient(90deg,rgba(217,180,106,.16),rgba(217,180,106,.07));
+  border-bottom:1px solid rgba(217,180,106,.28);color:var(--gold-2);
+}
+.net-banner.offline{
+  background:linear-gradient(90deg,rgba(226,104,95,.18),rgba(226,104,95,.07));
+  border-bottom-color:rgba(226,104,95,.32);color:#ffd9d5;
+}
+.net-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--gold-2);
+  box-shadow:0 0 0 0 rgba(217,180,106,.6);animation:netPulse 1.8s infinite;
+}
+.net-banner.offline .net-dot{background:#e2685f;box-shadow:0 0 0 0 rgba(226,104,95,.6)}
+@keyframes netPulse{70%{box-shadow:0 0 0 9px rgba(217,180,106,0)}100%{box-shadow:0 0 0 0 rgba(217,180,106,0)}}
+#netRetry{
+  padding:.4rem .9rem;border-radius:100px;font-size:.76rem;font-weight:800;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:inherit;
+  transition:background .25s,transform .25s;
+}
+#netRetry:hover{background:rgba(255,255,255,.18);transform:translateY(-1px)}
+.offline-state .empty-ico{color:#ffb3ac;background:rgba(226,104,95,.1);border-color:rgba(226,104,95,.3)}
+.offline-state .empty-cta{margin-top:.4rem}
+.offline-state .empty-cta2{margin-top:.2rem}

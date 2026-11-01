@@ -64,15 +64,32 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     } catch {}
   }
 
-  async function api(path, { method = 'GET', body } = {}) {
-    const res = await fetch(API_BASE + path, {
-      method,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}),
-      },
-      body: body ? JSON.stringify(body) : undefined,
-    });
+  async function api(path, { method = 'GET', body, retries = 2 } = {}) {
+    let res = null;
+    let lastErr = null;
+    for (let attempt = 0; attempt < retries; attempt++) {
+      const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timer = ctl ? setTimeout(() => ctl.abort(), 30000) : null;
+      try {
+        res = await fetch(API_BASE + path, {
+          method,
+          signal: ctl ? ctl.signal : undefined,
+          headers: {
+            'Content-Type': 'application/json',
+            ...(TOKEN ? { Authorization: 'Bearer ' + TOKEN } : {}),
+          },
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        if (timer) clearTimeout(timer);
+        break;
+      } catch (err) {
+        if (timer) clearTimeout(timer);
+        lastErr = err;
+        res = null;
+        if (attempt < retries - 1) await new Promise((r) => setTimeout(r, 800 * (attempt + 1)));
+      }
+    }
+    if (!res) throw new Error('تعذّر الاتصال بالخادم — تحقّق من الإنترنت ثم أعد المحاولة.');
     let data = {};
     try {
       data = await res.json();
@@ -87,6 +104,11 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   }
 
   /* ----------------------- تسجيل الدخول ----------------------- */
+  function showAdminNet(on) {
+    const el = $('#adminNetBanner');
+    if (el) el.hidden = !on;
+  }
+
   function showLogin() {
     $('#loginScreen').hidden = false;
     $('#app').hidden = true;
@@ -165,7 +187,14 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
   /* ----------------------- تحميل البيانات ----------------------- */
   async function loadAll() {
-    const data = await api('/api/admin/data');
+    let data;
+    try {
+      data = await api('/api/admin/data');
+    } catch (err) {
+      showAdminNet(true);
+      throw err;
+    }
+    showAdminNet(false);
     state.settings = data.settings;
     state.categories = data.categories || [];
     state.products = data.products || [];
@@ -1036,17 +1065,46 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   });
 
   /* ----------------------- البدء ----------------------- */
+  async function resumeSession() {
+    if (!TOKEN) return showLogin();
+    const s = await api('/api/admin/session');
+    if (!s.ok) return showLogin();
+    showApp();
+    await loadAll();
+    initShareBox();
+    switchTab('dashboard');
+  }
+
+  const adminRetry = $('#adminNetRetry');
+  if (adminRetry)
+    adminRetry.addEventListener('click', async () => {
+      adminRetry.textContent = 'جارٍ المحاولة…';
+      try {
+        if (TOKEN) await resumeSession();
+        else showLogin();
+        showAdminNet(false);
+        toast('تم التحديث ✓');
+      } catch (e) {
+        showAdminNet(true);
+        toast(e.message, true);
+      } finally {
+        adminRetry.textContent = 'إعادة المحاولة';
+      }
+    });
+  window.addEventListener('online', () => {
+    if (TOKEN && !$('#app').hidden) loadAll().catch(() => {});
+  });
+  window.addEventListener('error', (e) => console.warn('[admin] runtime', e.message));
+  window.addEventListener('unhandledrejection', (e) => console.warn('[admin] promise', e.reason));
+
   (async function init() {
     if (!TOKEN) return showLogin();
     try {
-      const s = await api('/api/admin/session');
-      if (!s.ok) return showLogin();
-      showApp();
-      await loadAll();
-      initShareBox();
-      switchTab('dashboard');
-    } catch {
+      await resumeSession();
+      showAdminNet(false);
+    } catch (err) {
       showLogin();
+      if (/الاتصال/.test((err && err.message) || '')) showAdminNet(true);
     }
   })();
 })();

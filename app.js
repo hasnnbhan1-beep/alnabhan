@@ -97,35 +97,228 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     )}`;
   }
 
+  /* ----------------------- بيانات افتراضية + نسخة محفوظة ----------------------- */
+  const CACHE_KEY = 'nabhan_snapshot_v1';
+  const DEFAULT_SETTINGS = {
+    brandName: 'النبهان',
+    brandLatin: 'AL NABHAN',
+    tagline: 'أزياء أوروبية أصيلة',
+    phoneDisplay: '0968 866 704',
+    whatsapp: '963968866704',
+    ownerName: 'بإدارة عادل نبهان',
+    announcement: '',
+    about: '',
+    deliveryNote: '',
+    workingHours: '',
+    address: 'ريف إدلب — قرية زردنا',
+    channel: 'https://whatsapp.com/channel/0029VanIEPT5a243fjnCwW3J',
+    currency: { symbol: '$', code: 'USD', position: 'before' },
+    secondary: { enabled: false, symbol: 'ل.س', rate: 0 },
+    hero: { image: '', kicker: '', title: 'النبهان', titleAccent: '', subtitle: '', cta: 'تسوّق المجموعة' },
+    features: [],
+    social: { instagram: '', facebook: '', tiktok: '' },
+  };
+
+  function mergeSettings(raw) {
+    const r = raw && typeof raw === 'object' ? raw : {};
+    const s = { ...DEFAULT_SETTINGS, ...r };
+    s.currency = { ...DEFAULT_SETTINGS.currency, ...(r.currency || {}) };
+    s.secondary = { ...DEFAULT_SETTINGS.secondary, ...(r.secondary || {}) };
+    s.hero = { ...DEFAULT_SETTINGS.hero, ...(r.hero || {}) };
+    s.social = { ...DEFAULT_SETTINGS.social, ...(r.social || {}) };
+    if (!Array.isArray(s.features)) s.features = [];
+    return s;
+  }
+
+  function safe(fn, label) {
+    try {
+      fn();
+    } catch (e) {
+      console.warn('[nabhan] ' + (label || 'step'), e);
+    }
+  }
+
+  function readSnapshot() {
+    try {
+      const raw = localStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const d = JSON.parse(raw);
+      if (!d || !Array.isArray(d.products)) return null;
+      return d;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeSnapshot() {
+    try {
+      localStorage.setItem(
+        CACHE_KEY,
+        JSON.stringify({
+          settings: state.settings,
+          categories: state.categories,
+          products: state.products,
+          at: Date.now(),
+        })
+      );
+    } catch {
+      /* قد تكون المساحة ممتلئة — لا نُعطّل التطبيق */
+    }
+  }
+
+  async function fetchJSON(url, tries = 3, timeout = 12000) {
+    let lastErr;
+    for (let i = 0; i < tries; i++) {
+      const ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
+      const timer = ctl ? setTimeout(() => ctl.abort(), timeout) : null;
+      try {
+        const res = await fetch(url + (url.indexOf('?') > -1 ? '&' : '?') + '_=' + Date.now(), {
+          signal: ctl ? ctl.signal : undefined,
+          cache: 'no-store',
+          headers: { Accept: 'application/json' },
+        });
+        if (timer) clearTimeout(timer);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return await res.json();
+      } catch (e) {
+        if (timer) clearTimeout(timer);
+        lastErr = e;
+        if (i < tries - 1) await new Promise((r) => setTimeout(r, 600 * (i + 1)));
+      }
+    }
+    throw lastErr || new Error('network');
+  }
+
+  async function loadData() {
+    const [storeData, prodData] = await Promise.all([
+      fetchJSON(API_BASE + '/api/store'),
+      fetchJSON(API_BASE + '/api/products'),
+    ]);
+    state.settings = mergeSettings(storeData && storeData.settings);
+    state.categories = storeData && Array.isArray(storeData.categories) ? storeData.categories : [];
+    state.products = prodData && Array.isArray(prodData.products) ? prodData.products : [];
+  }
+
+  /* إعادة رسم كل الواجهة (آمنة: أي خطأ في جزء لا يُسقط البقية) */
+  function paint() {
+    safe(applySettings, 'settings');
+    safe(renderCategories, 'categories');
+    safe(renderChips, 'chips');
+    safe(renderGrid, 'grid');
+    safe(renderCart, 'cart');
+    safe(refreshPdpWhatsIfOpen, 'pdp');
+  }
+
+  function refreshPdpWhatsIfOpen() {
+    const p = state.current || (state.selected && state.selected.product);
+    if (p && $('#productModal') && !$('#productModal').hidden) refreshPdpWhats();
+  }
+
+  /* ----------------------- حالة الشبكة ----------------------- */
+  function showNetBanner(cached) {
+    const el = $('#netBanner');
+    if (!el) return;
+    const txt = $('#netBannerText');
+    if (txt)
+      txt.textContent = cached
+        ? 'تعذّر تحديث البيانات الآن — تُعرض آخر نسخة محفوظة لدى جهازك.'
+        : 'تعذّر الاتصال بالخادم — تحقّق من الإنترنت ثم أعد المحاولة.';
+    el.hidden = false;
+    el.classList.toggle('offline', !cached);
+  }
+
+  function hideNetBanner() {
+    const el = $('#netBanner');
+    if (el) el.hidden = true;
+    const off = $('#offlineState');
+    if (off) off.hidden = true;
+  }
+
+  let retrying = false;
+  async function retryLoad() {
+    if (retrying) return;
+    retrying = true;
+    const btn = $('#netRetry');
+    if (btn) btn.textContent = 'جارٍ المحاولة…';
+    try {
+      await loadData();
+      writeSnapshot();
+      hideNetBanner();
+      paint();
+      if (!booted) finishBoot();
+      toast('تم التحديث ✓');
+    } catch {
+      showNetBanner(!!readSnapshot());
+      toast('ما زال الاتصال متعذراً — حاول بعد قليل', true);
+    } finally {
+      retrying = false;
+      if (btn) btn.textContent = 'إعادة المحاولة';
+    }
+  }
+
+  let booted = false;
+
   /* ----------------------- جلب البيانات ----------------------- */
   async function boot() {
-    try {
-      const [storeRes, prodRes] = await Promise.all([fetch(API_BASE + '/api/store'), fetch(API_BASE + '/api/products')]);
-      const storeData = await storeRes.json();
-      const prodData = await prodRes.json();
-      state.settings = storeData.settings;
-      state.categories = storeData.categories || [];
-      state.products = prodData.products || [];
-    } catch (e) {
-      console.error(e);
-      toast('تعذّر تحميل بيانات المتجر');
-      document.body.insertAdjacentHTML(
-        'afterbegin',
-        '<div style="padding:1rem;background:#b23b3b;color:#fff;text-align:center;font-size:.9rem">تعذّر الاتصال بالخادم. تأكد من تشغيل <b>node server.js</b>.</div>'
-      );
-      return;
+    // 1) عرض فوري من آخر نسخة محفوظة على جهاز الزبون (يعمل حتى بلا إنترنت)
+    const snap = readSnapshot();
+    if (snap) {
+      state.settings = mergeSettings(snap.settings);
+      state.categories = Array.isArray(snap.categories) ? snap.categories : [];
+      state.products = Array.isArray(snap.products) ? snap.products : [];
+      paint();
+      finishBoot();
     }
-    applySettings();
-    renderCategories();
-    renderChips();
-    renderGrid();
-    renderCart();
-    bindStaticLinks();
-    initEffects();
-    initPWA();
-    initShare();
-    handleDeepLink();
-    setTimeout(finishBoot, 400);
+
+    // 2) تحديث من الشبكة (مع إعادة محاولة تلقائية)
+    try {
+      await loadData();
+      writeSnapshot();
+      hideNetBanner();
+      paint();
+    } catch (e) {
+      console.warn('[nabhan] تعذّر التحديث من الشبكة', e);
+      const hasCache = !!snap;
+      if (!hasCache) {
+        state.settings = mergeSettings(state.settings);
+        const off = $('#offlineState');
+        if (off) off.hidden = false; // قبل الرسم حتى تُخفى حالة «المتجر فارغ»
+        paint();
+      }
+      showNetBanner(hasCache);
+    }
+
+    // 3) التهيئة مرة واحدة فقط
+    try {
+      bindStaticLinks();
+    } catch (e) {
+      console.warn('[nabhan] links', e);
+    }
+    safe(initEffects, 'effects');
+    safe(initPWA, 'pwa');
+    safe(initShare, 'share');
+    safe(handleDeepLink, 'deeplink');
+    safe(initNetUI, 'netui');
+    setTimeout(finishBoot, snap ? 60 : 400);
+    booted = true;
+  }
+
+  function initNetUI() {
+    const retry = $('#netRetry');
+    if (retry) retry.addEventListener('click', retryLoad);
+    const retry2 = $('#offlineRetry');
+    if (retry2) retry2.addEventListener('click', retryLoad);
+    window.addEventListener('online', () => retryLoad());
+    window.addEventListener('offline', () => showNetBanner(true));
+    // استئناف عند العودة للصفحة بعد فترة طويلة (قد يكون الخادم عاد)
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState !== 'visible' || !booted) return;
+      const banner = $('#netBanner');
+      if (banner && !banner.hidden) retryLoad();
+    });
+    // أي خطأ غير متوقع لا يجب أن يُجمّد التطبيق
+    window.addEventListener('error', (e) => console.warn('[nabhan] runtime', e.message));
+    window.addEventListener('unhandledrejection', (e) => console.warn('[nabhan] promise', e.reason));
   }
 
 
@@ -193,7 +386,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       .join('');
 
     // روابط واتساب
-    ['heroWhats', 'aboutWhats', 'bandWhats', 'footWhats', 'waFloat'].forEach((id) => {
+    ['heroWhats', 'aboutWhats', 'bandWhats', 'footWhats', 'waFloat', 'offlineWa', 'bandWa'].forEach((id) => {
       const el = document.getElementById(id);
       if (el) {
         el.href = waBase();
@@ -319,7 +512,9 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   function renderGrid() {
     const list = visibleProducts();
     const noneAtAll = (state.products || []).length === 0;
-    $('#emptyState').hidden = list.length > 0;
+    const offEl = $('#offlineState');
+    const offlineShowing = !!offEl && !offEl.hidden;
+    $('#emptyState').hidden = offlineShowing || list.length > 0;
     // إخفاء أدوات الفلترة والترتيب عندما لا يوجد أي منتج في المتجر
     $('#filterChips').hidden = noneAtAll;
     const sortWrap = $('#sortSelect') && $('#sortSelect').closest('.sort-wrap');

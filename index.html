@@ -23,12 +23,14 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="النبهان للألبسة الأوروبية" />
+<link rel="preconnect" href="https://kpzjtykobrdskomwwocv.supabase.co" crossorigin />
+<link rel="dns-prefetch" href="https://kpzjtykobrdskomwwocv.supabase.co" />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icon-180.png" />
 <link rel="icon" type="image/png" href="mark-192.png" />
 <link rel="preload" as="image" href="uploads/hero.jpg" fetchpriority="high" />
 <link rel="preload" as="font" type="font/ttf" href="fonts/Tajawal-ExtraBold.ttf" crossorigin />
-<link rel="stylesheet" href="styles.css?v=5.4" />
+<link rel="stylesheet" href="styles.css?v=6.0" />
 </head>
 <body class="loading">
 
@@ -41,6 +43,14 @@
 <!-- ===================== شريط الإعلان ===================== -->
 <div class="announce" id="announce" role="note">
   <div class="announce-track"><span id="announceText">توصيل إلى جميع المحافظات • الدفع عند الاستلام</span></div>
+</div>
+
+
+<!-- ===================== تنبيه الشبكة ===================== -->
+<div class="net-banner" id="netBanner" hidden role="status">
+  <span class="net-dot" aria-hidden="true"></span>
+  <span id="netBannerText">تعذّر تحديث البيانات الآن — تُعرض آخر نسخة محفوظة.</span>
+  <button type="button" id="netRetry">إعادة المحاولة</button>
 </div>
 
 <!-- ===================== الترويسة ===================== -->
@@ -232,6 +242,20 @@
 
       <div class="chips reveal" id="filterChips"></div>
       <div class="grid" id="productGrid"></div>
+
+      <div class="empty-state offline-state" id="offlineState" hidden>
+        <span class="empty-glow" aria-hidden="true"></span>
+        <div class="empty-ico" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 20a26 26 0 0 1 36 0"/><path d="M12 27a18 18 0 0 1 24 0"/><path d="M18 34a9 9 0 0 1 12 0"/>
+            <circle cx="24" cy="41" r="1.6" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3>لا يوجد اتصال بالإنترنت</h3>
+        <p>تحقّق من اتصالك ثم أعد المحاولة — أو راسلنا مباشرة على واتساب وسنخدمك فوراً.</p>
+        <button class="btn btn-gold empty-cta" id="offlineRetry" type="button">إعادة المحاولة</button>
+        <a class="btn btn-wa empty-cta2" id="offlineWa" href="#" target="_blank" rel="noopener noreferrer">📣 راسلنا على واتساب</a>
+      </div>
       <div class="empty-state" id="emptyState" hidden>
         <span class="empty-glow" aria-hidden="true"></span>
         <div class="empty-ico" aria-hidden="true">
@@ -565,6 +589,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="app.js?v=5.4"></script>
+<script src="app.js?v=6.0"></script>
 </body>
 </html>
