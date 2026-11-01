@@ -239,7 +239,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
         const count = state.products.filter((p) => p.category === c.id).length;
         return `<a href="#products" class="cat-card" data-cat="${esc(c.id)}">
           <img src="${esc(catImage(c.id))}" alt="${esc(c.name)}" loading="lazy" />
-          <div class="cat-label"><strong>${esc(c.name)}</strong><span>${count} قطعة</span></div>
+          <div class="cat-label"><strong>${esc(c.name)}</strong><span>${count > 0 ? count + ' قطعة' : 'قريباً'}</span></div>
         </a>`;
       })
       .join('');
