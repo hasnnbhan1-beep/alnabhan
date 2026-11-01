@@ -715,7 +715,13 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
     // صورة المشهد ثلاثي الأبعاد = أول منتج مميز
     const first = state.products.find((p) => p.featured && p.images && p.images[0]) || state.products.find((p) => p.images && p.images[0]);
-    if (first) $('#stageImg').src = first.images[0];
+    if (first) {
+      const st = $('#stageImg');
+      if (st) {
+        st.src = first.images[0];
+        st.classList.remove('brand-mark'); // صور المنتجات تُعرض كاملة بلا حشو
+      }
+    }
 
     // إخفاء توهج المؤشر عند الخروج
     document.addEventListener('pointerleave', () => document.body.classList.remove('has-cursor'));

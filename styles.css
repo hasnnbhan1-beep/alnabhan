@@ -872,3 +872,10 @@ body.share-open{overflow:hidden}
 .empty-state h3{font-family:var(--font-ar);font-size:1.25rem;font-weight:800;color:var(--text);margin-top:.4rem}
 .empty-state p{max-width:44ch;font-size:.86rem;line-height:1.85;color:var(--muted)}
 .empty-cta{margin-top:.5rem}
+
+/* صور الهوية في الواجهة (بدل صور تجريبية) */
+img.brand-mark{
+  object-fit:contain !important;padding:9%;
+  background:radial-gradient(circle at 50% 40%,rgba(16,94,72,.55),rgba(4,16,12,.96) 70%);
+}
+.about-frame img.brand-mark{padding:12%}
