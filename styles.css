@@ -739,7 +739,7 @@ body.has-cursor .cursor-glow{opacity:1}
   .float-chip{font-size:.7rem;padding:.5rem .75rem}
   .chip-a{display:none}
   .chip-c{display:none}
-  .chip-b{bottom:8%;inset-inline-end:5%}
+  .chip-b{bottom:-5%;inset-inline-end:3%;font-size:.66rem;padding:.45rem .7rem}
   .stage{width:min(248px,72%)}
   .hero-art{min-height:300px}
   .pcard-body{padding:.75rem .8rem .9rem}
