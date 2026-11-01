@@ -2,7 +2,7 @@
    النبهان — Service Worker
    يعطي: تحميل فوري، عمل بلا إنترنت، وتثبيت كتطبيق
    ========================================================= */
-const VERSION = 'nabhan-v4.5';
+const VERSION = 'nabhan-v4.6';
 const SHELL = [
   './',
   './index.html',

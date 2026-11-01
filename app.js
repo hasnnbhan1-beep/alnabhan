@@ -284,6 +284,10 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     const list = visibleProducts();
     const noneAtAll = (state.products || []).length === 0;
     $('#emptyState').hidden = list.length > 0;
+    // إخفاء أدوات الفلترة والترتيب عندما لا يوجد أي منتج في المتجر
+    $('#filterChips').hidden = noneAtAll;
+    const sortWrap = $('#sortSelect') && $('#sortSelect').closest('.sort-wrap');
+    if (sortWrap) sortWrap.hidden = noneAtAll;
     if (list.length === 0) {
       $('#emptyTitle').textContent = noneAtAll ? 'المتجر قيد التجهيز' : 'لا توجد منتجات مطابقة';
       $('#emptyText').textContent = noneAtAll
