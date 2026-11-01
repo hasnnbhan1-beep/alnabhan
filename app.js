@@ -12,7 +12,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   const PLACEHOLDER =
     'data:image/svg+xml;charset=utf-8,' +
     encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><rect width="300" height="400" fill="#ece2d2"/><g fill="none" stroke="#c4b49a" stroke-width="1"><circle cx="150" cy="170" r="46"/><path d="M104 170h92M150 124v92"/></g><text x="150" y="270" font-family="sans-serif" font-size="13" fill="#a99a82" text-anchor="middle">النبهان</text></svg>`
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e3a2b"/><stop offset="1" stop-color="#040d0a"/></linearGradient></defs><rect width="300" height="400" fill="url(#g)"/><circle cx="150" cy="182" r="64" fill="none" stroke="#d9b46a" stroke-opacity=".38" stroke-width="1.2"/><path d="M129 210V154l42 56v-56" fill="none" stroke="#d9b46a" stroke-opacity=".85" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><text x="150" y="262" font-family="Georgia,serif" font-size="13" letter-spacing="6" fill="#d9b46a" fill-opacity=".7" text-anchor="middle">NABHAN</text></svg>`
     );
 
   const state = {
@@ -234,7 +234,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
     // بطاقات الأقسام
     $('#catGrid').innerHTML = state.categories
-      .slice(0, 4)
+      .slice(0, 8)
       .map((c) => {
         const count = state.products.filter((p) => p.category === c.id).length;
         return `<a href="#products" class="cat-card" data-cat="${esc(c.id)}">

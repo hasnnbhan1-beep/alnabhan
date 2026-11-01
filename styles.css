@@ -347,7 +347,7 @@ body.has-cursor .cursor-glow{opacity:1}
 .section-sub{font-size:.92rem;color:var(--muted);margin-top:.7rem}
 
 /* الأقسام */
-.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.1rem}
 .cat-card{
   position:relative;overflow:hidden;border-radius:var(--radius);aspect-ratio:3/4;display:block;
   border:1px solid var(--stroke);transform-style:preserve-3d;
