@@ -23,6 +23,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     editing: null,
     images: [],
     colors: [],
+    videos: [],
     video: '',
     videoUrl: '',
     tab: 'products',
@@ -288,7 +289,9 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
         const img = (p.images && p.images[0]) || PLACEHOLDER;
         const media = [];
         if (p.images && p.images.length) media.push(`<span class="icon-tag">🖼 ${p.images.length}</span>`);
-        if (p.video || p.videoUrl) media.push(`<span class="icon-tag">▶ فيديو</span>`);
+        const vcount = (Array.isArray(p.videos) && p.videos.length) || (p.video ? 1 : 0);
+        if (vcount) media.push(`<span class="icon-tag">▶ ${vcount} فيديو</span>`);
+        else if (p.videoUrl) media.push(`<span class="icon-tag">🔗 فيديو</span>`);
         return `<tr data-id="${esc(p.id)}">
           <td>
             <div class="prod-cell">
@@ -375,7 +378,10 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     state.editing = p;
     state.images = p ? (p.images || []).slice() : [];
     state.colors = p ? (p.colors || []).map((c) => ({ ...c })) : [];
-    state.video = p ? p.video || '' : '';
+    state.videos = p
+      ? (Array.isArray(p.videos) && p.videos.length ? p.videos.slice() : (p.video ? [p.video] : []))
+      : [];
+    state.video = state.videos[0] || '';
     state.videoUrl = p ? p.videoUrl || '' : '';
 
     const f = $('#productForm');
@@ -459,21 +465,34 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
   function renderVideo() {
     const parts = [];
-    if (state.video)
-      parts.push(`<span class="video-chip">
-        <video src="${esc(state.video)}" class="video-preview" muted></video>
-        فيديو مرفوع
-        <button type="button" id="rmVideo">حذف</button>
-      </span>`);
+    state.videos.forEach((src, i) => {
+      parts.push(`<div class="video-chip video-item">
+        <video src="${esc(src)}" class="video-preview" muted playsinline preload="metadata"></video>
+        <span class="video-lbl">${i === 0 ? 'فيديو رئيسي' : 'فيديو ' + (i + 1)}</span>
+        <button type="button" class="video-rm" data-rmvideo="${i}">حذف</button>
+      </div>`);
+    });
     if (state.videoUrl)
       parts.push(`<span class="video-chip">🔗 ${esc(state.videoUrl.slice(0, 40))}…
         <button type="button" id="rmVideoUrl">حذف</button></span>`);
-    if (!parts.length) parts.push('<span class="field-hint">لا يوجد فيديو بعد — يمكنك رفع ملف MP4 أو إضافة رابط.</span>');
+    if (!parts.length)
+      parts.push('<span class="field-hint">لا يوجد فيديو بعد — يمكنك رفع أي عدد من ملفات MP4/WEBM/MOV أو إضافة روابط.</span>');
+    else
+      parts.push(`<span class="field-hint">عدد الفيديوهات المرفوعة: ${state.videos.length} — يمكنك إضافة المزيد بلا حدود.</span>`);
     $('#videoRow').innerHTML = parts.join('');
-    const a = $('#rmVideo');
-    if (a) a.addEventListener('click', () => { state.video = ''; renderVideo(); });
-    const b = $('#rmVideoUrl');
-    if (b) b.addEventListener('click', () => { state.videoUrl = ''; renderVideo(); });
+    $$('[data-rmvideo]').forEach((b) =>
+      b.addEventListener('click', () => {
+        state.videos.splice(Number(b.dataset.rmvideo), 1);
+        state.video = state.videos[0] || '';
+        renderVideo();
+      })
+    );
+    const b2 = $('#rmVideoUrl');
+    if (b2)
+      b2.addEventListener('click', () => {
+        state.videoUrl = '';
+        renderVideo();
+      });
   }
 
   $('#addVideoUrl').addEventListener('click', () => {
@@ -693,7 +712,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       }
       if (vids.length) {
         const dt = new DataTransfer();
-        dt.items.add(vids[0]);
+        vids.forEach((f) => dt.items.add(f));
         const inp = $('#videoInput');
         inp.files = dt.files;
         inp.dispatchEvent(new Event('change'));
@@ -702,23 +721,38 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   })();
 
   $('#videoInput').addEventListener('change', async (e) => {
-    const file = (e.target.files || [])[0];
+    const files = Array.from(e.target.files || []);
     e.target.value = '';
-    if (!file) return;
-    if (!OK_VID.test(file.type)) return toast('صيغة الفيديو غير مدعومة — استخدم MP4 أو WEBM أو MOV', true);
-    if (file.size > MAX_VIDEO) return toast(`حجم الفيديو ${humanSize(file.size)} أكبر من الحد ${humanSize(MAX_VIDEO)}`, true);
+    if (!files.length) return;
     const btn = $('#videoInput').closest('.upload-btn');
     btn.classList.add('busy');
-    toast(`جارٍ رفع الفيديو (${humanSize(file.size)})… لا تغلق الصفحة`);
+    let done = 0;
+    const failed = [];
     try {
-      const url = await uploadOne(file, file.name, file.type, (p) => {
-        if (p != null) toast(`جارٍ رفع الفيديو — ${p}% من ${humanSize(file.size)}`);
-      });
-      state.video = url;
-      renderVideo();
-      toast('تم رفع الفيديو ✓ اضغط «حفظ المنتج» لتثبيته');
-    } catch (err) {
-      toast(err.message || 'تعذّر رفع الفيديو', true);
+      for (const file of files) {
+        done++;
+        if (!OK_VID.test(file.type)) {
+          failed.push(file.name + ' (صيغة غير مدعومة)');
+          continue;
+        }
+        if (file.size > MAX_VIDEO) {
+          failed.push(file.name + ' (أكبر من ' + humanSize(MAX_VIDEO) + ')');
+          continue;
+        }
+        toast(`جارٍ رفع الفيديو ${done}/${files.length} (${humanSize(file.size)})… لا تغلق الصفحة`);
+        try {
+          const url = await uploadOne(file, file.name, file.type, (p) => {
+            if (p != null) toast(`فيديو ${done}/${files.length} — ${p}% من ${humanSize(file.size)}`);
+          });
+          state.videos.push(url);
+          state.video = state.videos[0] || '';
+          renderVideo();
+        } catch (err) {
+          failed.push(file.name + ' (' + (err.message || 'فشل الرفع') + ')');
+        }
+      }
+      if (failed.length) toast('تم رفع ' + state.videos.length + ' فيديو — تعذّر: ' + failed.join('، '), true);
+      else toast(`تم رفع ${files.length} فيديو ✓ اضغط «حفظ المنتج» لتثبيته`);
     } finally {
       btn.classList.remove('busy');
     }
@@ -731,7 +765,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     if (f.price.value === '') return toast('السعر مطلوب — أنت وحدك من يحدّده', true);
     if (!(Number(f.price.value) >= 0)) return toast('السعر يجب أن يكون رقماً صحيحاً', true);
     if (!f.category.value) return toast('اختر القسم', true);
-    if (!state.images.length && !state.video) {
+    if (!state.images.length && !state.videos.length) {
       if (!confirm('لم تضف أي صورة أو فيديو لهذا المنتج. المتابعة بدون وسائط؟')) return;
     }
 
@@ -744,7 +778,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       badge: f.badge.value.trim(),
       description: f.description.value.trim(),
       images: state.images,
-      video: state.video,
+      videos: state.videos,
+      video: state.videos[0] || '',
       videoUrl: state.videoUrl,
       sizes: f.sizes.value
         .split(',')

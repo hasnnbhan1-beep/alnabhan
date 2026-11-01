@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <link rel="apple-touch-icon" href="icon-180.png" />
 <link rel="icon" type="image/png" href="mark-192.png" />
-<link rel="stylesheet" href="admin.css?v=4.8" />
+<link rel="stylesheet" href="admin.css?v=5.3" />
 </head>
 <body>
 
@@ -305,7 +305,7 @@
       <div class="field"><label>الوصف</label><textarea name="description" rows="4" placeholder="خامة، قصّة، تفاصيل…"></textarea></div>
 
       <div class="field">
-        <label>الصور <small class="hint-inline">— حتى 10 صور، تُضغط تلقائياً قبل الرفع · اسحب الصور وأفلتها هنا</small></label>
+        <label>الصور <small class="hint-inline">— بدون حد أقصى · تُضغط تلقائياً قبل الرفع · اسحب الصور وأفلتها هنا</small></label>
         <div class="media-grid" id="imagesGrid"></div>
         <div class="upload-row">
           <label class="upload-btn">
@@ -319,12 +319,12 @@
       </div>
 
       <div class="field">
-        <label>فيديو المنتج <small class="hint-inline">— MP4 / WEBM / MOV حتى 85 م.ب</small></label>
+        <label>فيديوهات المنتج <small class="hint-inline">— أي عدد من الملفات · MP4 / WEBM / MOV · حتى 85 م.ب للملف</small></label>
         <div class="video-row" id="videoRow"></div>
         <div class="upload-row">
           <label class="upload-btn">
-            + رفع فيديو من الجهاز
-            <input type="file" id="videoInput" accept="video/mp4,video/webm,video/quicktime" hidden />
+            + رفع فيديوهات من الجهاز
+            <input type="file" id="videoInput" accept="video/mp4,video/webm,video/quicktime" multiple hidden />
           </label>
           <input id="videoUrlInput" class="url-input" placeholder="أو رابط فيديو (يوتيوب/إنستغرام)" />
           <button type="button" class="btn btn-glass btn-sm" id="addVideoUrl">إضافة رابط</button>
@@ -361,7 +361,7 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="admin.js?v=4.8"></script>
+<script src="admin.js?v=5.3"></script>
 <script>
   // رابط المتجر — يعمل على أي استضافة (جذر أو مجلد فرعي)
   (function initStoreUrl() {

@@ -80,7 +80,11 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
   const catName = (id) => (state.categories.find((c) => c.id === id) || {}).name || 'منتجات';
   const productById = (id) => state.products.find((p) => p.id === id);
-  const firstImage = (p) => (p.images && p.images[0]) || (p.video ? null : PLACEHOLDER);
+  const videosOf = (p) => {
+    if (Array.isArray(p.videos) && p.videos.length) return p.videos.filter(Boolean);
+    return p.video ? [p.video] : [];
+  };
+  const firstImage = (p) => (p.images && p.images[0]) || (videosOf(p).length ? null : PLACEHOLDER);
 
   function waLink(text) {
     const num = (state.settings && state.settings.whatsapp) || '';
@@ -337,8 +341,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
         const soldOut = p.inStock === false;
         const media = hasImg
           ? `<img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" />`
-          : p.video
-          ? `<video src="${esc(p.video)}" muted playsinline preload="metadata"></video>`
+          : videosOf(p).length
+          ? `<video src="${esc(videosOf(p)[0])}" muted playsinline preload="metadata"></video>`
           : `<img src="${esc(img)}" alt="${esc(p.name)}" loading="lazy" />`;
         return `<article class="pcard reveal" style="transition-delay:${(i % 8) * 60}ms">
           <div class="pcard-inner">
@@ -461,7 +465,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   function renderMedia(p, index) {
     const media = [];
     (p.images || []).forEach((src) => media.push({ type: 'img', src }));
-    if (p.video) media.push({ type: 'video', src: p.video });
+    videosOf(p).forEach((src) => media.push({ type: 'video', src }));
     if (!media.length) media.push({ type: 'img', src: PLACEHOLDER });
 
     const item = media[index] || media[0];
@@ -1033,7 +1037,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
     const prev = $('#sharePreview');
     if (isP) {
-      const thumb = (p.images && p.images[0]) || p.video || PLACEHOLDER;
+      const thumb = (p.images && p.images[0]) || videosOf(p)[0] || PLACEHOLDER;
       $('#shareThumb').src = thumb;
       $('#shareName').textContent = p.name;
       $('#sharePrice').innerHTML = money(p.price);
