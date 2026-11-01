@@ -603,13 +603,13 @@ body.has-cursor .cursor-glow{opacity:1}
 .modal-close:hover{transform:rotate(90deg);background:var(--gold);color:#0e231b}
 
 /* نافذة المنتج */
-.modal-grid{display:grid;grid-template-columns:1.02fr 1fr}
-.pdp-media{padding:1.1rem;background:rgba(255,255,255,.02);border-inline-end:1px solid var(--stroke)}
+.modal-grid{display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);align-items:start}
+.pdp-media{min-width:0;padding:1.1rem;background:rgba(255,255,255,.02);border-inline-end:1px solid var(--stroke)}
 .pdp-main{position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:#0c1e17}
 .pdp-main img,.pdp-main video{width:100%;height:100%;object-fit:cover}
 .pdp-thumbs{
   display:flex;gap:.5rem;margin-top:.7rem;flex-wrap:nowrap;
-  overflow-x:auto;overflow-y:hidden;padding-bottom:.35rem;
+  min-width:0;max-width:100%;overflow-x:auto;overflow-y:hidden;padding-bottom:.35rem;
   scroll-snap-type:x proximity;scrollbar-width:thin;
 }
 .pdp-thumbs::-webkit-scrollbar{height:5px}
@@ -702,7 +702,7 @@ body.has-cursor .cursor-glow{opacity:1}
   .about-media{max-width:440px;margin-inline:auto}
   .nav{display:none}
   .only-mobile{display:grid !important}
-  .modal-grid{grid-template-columns:1fr}
+  .modal-grid{grid-template-columns:minmax(0,1fr)}
   .pdp-info{padding:1.6rem 1.4rem}
   .cat-grid{grid-template-columns:repeat(2,1fr)}
 }
