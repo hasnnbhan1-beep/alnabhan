@@ -119,6 +119,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     bindStaticLinks();
     initEffects();
     initPWA();
+    initShare();
     handleDeepLink();
     setTimeout(finishBoot, 400);
   }
@@ -300,6 +301,9 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
               ${off ? `<span class="pcard-off">-${off}%</span>` : ''}
               ${media}
               ${soldOut ? `<span class="pcard-sold">نفدت الكمية</span>` : ''}
+              <button class="pcard-share" data-share="${esc(p.id)}" type="button" aria-label="مشاركة ${esc(p.name)}" title="شارك هذا المنتج">
+                <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8 15.7 6.3M8.3 13.2l7.4 4.5"/></svg>
+              </button>
               <span class="pcard-shine"></span>
             </div>
             <div class="pcard-body">
@@ -321,6 +325,15 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
     $$('[data-open]').forEach((el) =>
       el.addEventListener('click', () => openProduct(el.dataset.open))
+    );
+    // زر المشاركة على البطاقة — يمنع فتح صفحة المنتج
+    $$('[data-share]').forEach((el) =>
+      el.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const sp = productById(el.dataset.share);
+        if (sp) openShare('product', sp);
+      })
     );
     $$('[data-quick]').forEach((el) =>
       el.addEventListener('click', (e) => {
@@ -346,6 +359,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       media: 0,
     };
 
+    state.current = p;
     $('#pdpCat').textContent = catName(p.category) + (p.code ? ' • ' + p.code : '');
     $('#pdpTitle').textContent = p.name;
     $('#pdpPrice').innerHTML = money(p.price);
@@ -915,6 +929,181 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
         if (btn.hidden) btn.hidden = false;
       }, 4200);
     }
+  }
+
+
+  /* ======================= المشاركة ======================= */
+  function shareBase() {
+    // رابط نظيف يعمل على الأجهزة الأخرى (بدون أي بارامترات)
+    return location.origin + location.pathname;
+  }
+
+  function productShareUrl(p) {
+    return shareBase() + '#p/' + p.id;
+  }
+
+  function productShareText(p) {
+    const off = p.oldPrice && p.oldPrice > p.price ? ` (بدل ${plainMoney(p.oldPrice)})` : '';
+    return [
+      'شوفوا هذا المنتج من النبهان للألبسة الأوروبية 🛍️',
+      '',
+      `👗 ${p.name}${p.code ? ` — ${p.code}` : ''}`,
+      `💰 السعر: ${plainMoney(p.price)}${off}`,
+      '',
+      productShareUrl(p),
+    ].join('\n');
+  }
+
+  function storeShareText() {
+    const s = state.settings || {};
+    return [
+      `متجر ${s.brandName || 'النبهان للألبسة الأوروبية'} 🛍️`,
+      s.tagline || 'أزياء أوروبية أصيلة — مختارة بعناية.',
+      'توصيل لجميع المحافظات • الدفع عند الاستلام',
+      '',
+      shareBase(),
+    ].join('\n');
+  }
+
+  let shareState = { kind: 'store', p: null };
+
+  function openShare(kind, p) {
+    shareState = { kind, p: p || null };
+    const isP = kind === 'product' && p;
+    const url = isP ? productShareUrl(p) : shareBase();
+    const text = isP ? productShareText(p) : storeShareText();
+    const title = isP ? p.name : (state.settings.brandName || 'النبهان للألبسة الأوروبية');
+
+    $('#shareTitle').textContent = isP ? 'شارك المنتج مع من تحب' : 'شارك المتجر مع من تحب';
+    $('#shareHint').textContent = isP
+      ? 'أرسل الرابط لأي شخص — يفتح المنتج مباشرة على جهازه أو داخل تطبيق النبهان.'
+      : 'أرسل رابط المتجر لأي شخص — يفتح التطبيق ويمكنه التثبيت على جهازه.';
+
+    const prev = $('#sharePreview');
+    if (isP) {
+      const thumb = (p.images && p.images[0]) || p.video || PLACEHOLDER;
+      $('#shareThumb').src = thumb;
+      $('#shareName').textContent = p.name;
+      $('#sharePrice').innerHTML = money(p.price);
+      prev.hidden = false;
+    } else {
+      prev.hidden = true;
+    }
+
+    $('#shareLink').value = url;
+    $('#shareWa').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+    $('#shareTg').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(isP ? p.name : title);
+    $('#shareFb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+    $('#shareX').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(isP ? `شوفوا: ${p.name}` : title) + '&url=' + encodeURIComponent(url);
+    $('#shareSms').href = 'sms:?&body=' + encodeURIComponent(text);
+
+    // زر المشاركة الأصلية للجهاز (يعمل على الجوال وأغلب المتصفحات الحديثة)
+    const native = $('#shareNative');
+    native.hidden = !(navigator.share);
+    native.dataset.title = title;
+    native.dataset.text = isP ? `شوفوا هذا المنتج من النبهان: ${p.name}\n${plainMoney(p.price)}` : storeShareText();
+
+    $('#shareModal').hidden = false;
+    document.body.classList.add('share-open');
+    setTimeout(() => {
+      const first = $('#shareNative').hidden ? $('#shareWa') : $('#shareNative');
+      if (first && first.focus) first.focus();
+    }, 60);
+  }
+
+  function closeShare() {
+    $('#shareModal').hidden = true;
+    document.body.classList.remove('share-open');
+  }
+
+  async function copyText(txt) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(txt);
+        return true;
+      }
+    } catch {}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+
+  async function doCopy(text, label) {
+    const ok = await copyText(text);
+    toast(ok ? (label || 'تم نسخ الرابط ✓') : 'تعذّر النسخ — يمكنك تحديد الرابط ونسخه يدوياً');
+    return ok;
+  }
+
+  document.addEventListener('click', (e) => {
+    const sh = e.target.closest('[data-share]');
+    if (sh) {
+      e.preventDefault();
+      e.stopPropagation();
+      const p = productById(sh.dataset.share);
+      if (p) openShare('product', p);
+      return;
+    }
+    if (e.target.closest('[data-share-close]')) {
+      e.preventDefault();
+      closeShare();
+      return;
+    }
+    const shareOpenBtn = e.target.closest('#footShare');
+    if (shareOpenBtn) {
+      e.preventDefault();
+      openShare('store');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !$('#shareModal').hidden) closeShare();
+  });
+
+  function initShare() {
+    const pdpShare = $('#pdpShare');
+    if (pdpShare)
+      pdpShare.addEventListener('click', () => {
+        const p = state.current || state.selected.product;
+        if (p) openShare('product', p);
+      });
+
+    $('#shareNative').addEventListener('click', async () => {
+      const b = $('#shareNative');
+      try {
+        await navigator.share({
+          title: b.dataset.title || 'النبهان',
+          text: b.dataset.text || '',
+          url: $('#shareLink').value,
+        });
+        closeShare();
+      } catch (err) {
+        if (!err || err.name !== 'AbortError') toast('تعذّرت المشاركة — استخدم أحد الخيارات أدناه');
+      }
+    });
+
+    $('#shareCopy').addEventListener('click', () => doCopy($('#shareLink').value));
+    $('#shareLinkCopy').addEventListener('click', () => doCopy($('#shareLink').value));
+
+    ['#shareWa', '#shareTg', '#shareFb', '#shareX', '#shareSms'].forEach((sel) => {
+      const el = $(sel);
+      if (el) el.addEventListener('click', () => setTimeout(closeShare, 400));
+    });
+    // نسخ نص الرسالة كاملاً عند الضغط الطويل على واتساب
+    $('#shareWa').addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      const p = shareState.p;
+      doCopy(p ? productShareText(p) : storeShareText(), 'تم نسخ الرسالة كاملة ✓');
+    });
   }
 
   function handleDeepLink() {

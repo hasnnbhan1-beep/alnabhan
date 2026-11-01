@@ -759,3 +759,92 @@ body.has-cursor .cursor-glow{opacity:1}
   .icon-btn{width:44px;height:44px;min-width:44px;min-height:44px}
   .appbar-item{min-height:56px}
 }
+
+/* ======================= المشاركة ======================= */
+.pcard-share{
+  position:absolute;bottom:.6rem;inset-inline-end:.6rem;z-index:4;
+  width:34px;height:34px;display:grid;place-items:center;border-radius:50%;
+  background:rgba(6,12,10,.62);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.22);color:var(--gold-2);
+  transition:transform .3s var(--ease-out),background .3s,color .3s,border-color .3s;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+}
+.pcard-share:hover{transform:translateY(-2px) scale(1.08);background:linear-gradient(135deg,var(--gold-2),var(--gold-deep));color:#0e231b;border-color:transparent}
+.pcard-share:active{transform:scale(.94)}
+
+.pdp-actions-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.pdp-share-btn{font-size:.86rem}
+
+.share-modal{position:fixed;inset:0;z-index:130;display:grid;align-items:end;justify-items:center;padding:0}
+.share-scrim{position:absolute;inset:0;background:rgba(2,4,3,.74);backdrop-filter:blur(10px);animation:fade .28s var(--ease)}
+.share-sheet{
+  position:relative;z-index:2;width:min(560px,100%);max-height:92vh;overflow:auto;
+  padding:1.1rem 1.2rem calc(1.5rem + env(safe-area-inset-bottom));
+  border-radius:26px 26px 0 0;
+  background:linear-gradient(180deg,#0f241c,#070f0c 70%);
+  border:1px solid var(--stroke-2);border-bottom:none;
+  box-shadow:0 -20px 70px rgba(0,0,0,.6);
+  animation:sheetIn .42s var(--ease-out);
+}
+@keyframes sheetIn{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+.share-handle{display:block;width:46px;height:4px;border-radius:100px;background:rgba(255,255,255,.22);margin:0 auto .9rem}
+.share-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.share-head h3{font-family:var(--font-ar);font-size:1.06rem;font-weight:800;color:var(--text)}
+.share-x{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--surface);border:1px solid var(--stroke);color:var(--muted);font-size:.9rem;
+}
+.share-x:hover{color:var(--text);border-color:var(--gold)}
+
+.share-preview{
+  display:flex;align-items:center;gap:.85rem;padding:.7rem;margin-bottom:1rem;
+  background:var(--surface);border:1px solid var(--stroke);border-radius:16px;
+}
+.share-preview img{width:52px;height:66px;object-fit:cover;border-radius:10px;background:#0c1e17;flex:none}
+.share-preview-copy{display:flex;flex-direction:column;gap:.25rem;min-width:0}
+.share-preview-copy b{font-size:.88rem;color:var(--text);font-weight:700;line-height:1.35}
+.share-preview-copy span{font-size:.85rem;color:var(--gold-2);font-weight:800}
+
+.share-native{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;
+  padding:.9rem 1rem;border-radius:14px;margin-bottom:.9rem;
+  background:linear-gradient(135deg,var(--gold-2),var(--gold-deep));color:#0e231b;
+  font-weight:800;font-size:.9rem;border:none;
+  transition:transform .25s var(--ease-out),filter .25s;
+}
+.share-native:hover{transform:translateY(-2px);filter:brightness(1.05)}
+
+.share-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-bottom:1rem}
+.share-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.45rem;
+  padding:.85rem .4rem;border-radius:16px;text-decoration:none;
+  background:var(--surface);border:1px solid var(--stroke);color:var(--text);
+  font-size:.76rem;font-weight:700;
+  transition:transform .25s var(--ease-out),background .25s,border-color .25s,color .25s;
+}
+.share-item:hover{transform:translateY(-3px);background:var(--surface-2);border-color:var(--gold)}
+.share-item.wa{color:#4be07d}
+.share-item.tg{color:#4fc3f7}
+.share-item.fb{color:#8ba7ff}
+.share-item.x{color:#e7e7e7}
+.share-item.copy{color:var(--gold-2)}
+
+.share-linkbox{display:flex;gap:.5rem;margin-bottom:.7rem}
+.share-linkbox input{
+  flex:1;min-width:0;padding:.75rem .9rem;border-radius:12px;
+  background:rgba(0,0,0,.35);border:1px solid var(--stroke);color:var(--muted);
+  font-size:.76rem;font-family:ui-monospace,Menlo,monospace;
+}
+.share-linkbox button{
+  padding:.75rem 1.1rem;border-radius:12px;font-weight:800;font-size:.8rem;
+  background:var(--surface-2);border:1px solid var(--stroke-2);color:var(--text);
+}
+.share-linkbox button:hover{background:rgba(217,180,106,.16);border-color:var(--gold);color:var(--gold-2)}
+.share-hint{font-size:.73rem;line-height:1.6;color:var(--muted-2);text-align:center}
+body.share-open{overflow:hidden}
+
+@media (max-width:640px){
+  .share-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem}
+  .share-item{font-size:.72rem;padding:.75rem .3rem}
+  .pdp-actions-row{grid-template-columns:1fr;gap:.5rem}
+}

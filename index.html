@@ -14,7 +14,7 @@
 <link rel="icon" type="image/png" href="mark-192.png" />
 <link rel="preload" as="image" href="uploads/hero.jpg" fetchpriority="high" />
 <link rel="preload" as="font" type="font/ttf" href="fonts/Tajawal-ExtraBold.ttf" crossorigin />
-<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="styles.css?v=4.3" />
 </head>
 <body class="loading">
 
@@ -259,6 +259,7 @@
         <li><a href="#" data-help="delivery">التوصيل والأجور</a></li>
         <li><a href="#" data-help="exchange">الاستبدال والإرجاع</a></li>
         <li><a href="#" data-help="sizes">دليل المقاسات</a></li>
+        <li><a href="#" id="footShare">شارك المتجر مع أصدقائك</a></li>
         <li><a href="admin.html" class="owner-link">تطبيق المالك</a></li>
       </ul>
     </div>
@@ -380,7 +381,10 @@
             <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Z"/></svg>
             <span id="pdpWhatsLabel">اطلب الآن عبر واتساب</span>
           </a>
-          <button class="btn btn-glass btn-block" id="pdpAdd">أضف إلى السلة</button>
+          <div class="pdp-actions-row">
+            <button class="btn btn-glass" id="pdpAdd">أضف إلى السلة</button>
+            <button class="btn btn-glass pdp-share-btn" id="pdpShare"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8 15.7 6.3M8.3 13.2l7.4 4.5"/></svg> شارك المنتج</button>
+          </div>
         </div>
         <ul class="pdp-perks">
           <li>الدفع عند الاستلام</li>
@@ -442,8 +446,67 @@
   </div>
 </div>
 
+
+<!-- ===================== نافذة المشاركة ===================== -->
+<div class="share-modal" id="shareModal" hidden>
+  <div class="share-scrim" data-share-close></div>
+  <div class="share-sheet" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <span class="share-handle" aria-hidden="true"></span>
+    <div class="share-head">
+      <h3 id="shareTitle">شارك المنتج</h3>
+      <button class="share-x" data-share-close aria-label="إغلاق">✕</button>
+    </div>
+
+    <div class="share-preview" id="sharePreview" hidden>
+      <img id="shareThumb" alt="" />
+      <div class="share-preview-copy">
+        <b id="shareName"></b>
+        <span id="sharePrice"></span>
+      </div>
+    </div>
+
+    <button class="share-native" id="shareNative" hidden>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.8 15.7 6.3M8.3 13.2l7.4 4.5"/></svg>
+      مشاركة عبر تطبيقات الجهاز
+    </button>
+
+    <div class="share-grid">
+      <a class="share-item wa" id="shareWa" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg>
+        <span>واتساب</span>
+      </a>
+      <a class="share-item tg" id="shareTg" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M21.9 4.3 18.9 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.2.2-.5.4-.9.4l.3-4.6 8.4-7.6c.4-.3-.1-.5-.6-.2L7.3 12.7 2.8 11.3c-1-.3-1-1 .2-1.5L20.4 3c.8-.3 1.6.2 1.5 1.3Z"/></svg>
+        <span>تلغرام</span>
+      </a>
+      <a class="share-item fb" id="shareFb" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H7v3h3v6h3v-6h3l1-3h-4v-2c0-.6.4-1 1-1Z"/></svg>
+        <span>فيسبوك</span>
+      </a>
+      <a class="share-item x" id="shareX" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M17.5 3h3l-6.6 7.6L21.8 21h-5.9l-4.3-5.6L6.5 21H3.4l7.1-8.1L2.6 3h6l3.9 5.2L17.5 3Zm-1 16h1.6L7.2 4.6H5.5L16.5 19Z"/></svg>
+        <span>إكس</span>
+      </a>
+      <a class="share-item sms" id="shareSms">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/></svg>
+        <span>رسالة SMS</span>
+      </a>
+      <button class="share-item copy" id="shareCopy" type="button">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M15 5.5A2.5 2.5 0 0 0 12.5 3H6.5A2.5 2.5 0 0 0 4 5.5v6A2.5 2.5 0 0 0 6.5 14"/></svg>
+        <span>نسخ الرابط</span>
+      </button>
+    </div>
+
+    <div class="share-linkbox">
+      <input id="shareLink" readonly dir="ltr" aria-label="رابط المشاركة" />
+      <button type="button" id="shareLinkCopy">نسخ</button>
+    </div>
+    <p class="share-hint" id="shareHint">أرسل الرابط لأي شخص — يفتح المنتج مباشرة على جهازه أو داخل تطبيق النبهان.</p>
+  </div>
+</div>
+
 <div class="toast" id="toast" hidden></div>
 
-<script src="app.js"></script>
+<script src="app.js?v=4.3"></script>
 </body>
 </html>
