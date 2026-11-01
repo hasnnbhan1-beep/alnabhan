@@ -116,7 +116,11 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     secondary: { enabled: false, symbol: 'ل.س', rate: 0 },
     hero: { image: '', kicker: '', title: 'النبهان', titleAccent: '', subtitle: '', cta: 'تسوّق المجموعة' },
     features: [],
-    social: { instagram: '', facebook: '', tiktok: '' },
+    social: {
+      instagram: 'https://www.instagram.com/nbhan_nbhan1/',
+      facebook: 'https://www.facebook.com/adelnbhan',
+      tiktok: '',
+    },
   };
 
   function mergeSettings(raw) {
@@ -396,18 +400,68 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     });
 
     // الشبكات الاجتماعية
+    renderSocial();
+  }
+
+  const SOCIAL_ICONS = {
+    instagram:
+      '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.1" cy="6.9" r="1.25" fill="currentColor"/></svg>',
+    facebook:
+      '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M13.5 21.5v-7.6h2.6l.4-3h-3V9c0-.87.24-1.46 1.5-1.46h1.6V4.85c-.28-.04-1.24-.12-2.36-.12-2.34 0-3.94 1.42-3.94 4.04v2.13H8v3h2.3v7.6h3.2Z"/></svg>',
+    tiktok:
+      '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16.2 3h-2.7v11.3a2.3 2.3 0 1 1-2.3-2.3c.2 0 .4 0 .6.06V9.3a5 5 0 1 0 4.4 4.96V8.7a5.2 5.2 0 0 0 3 1v-2.6a2.6 2.6 0 0 1-2.6-2.6V3Z"/></svg>',
+    whatsapp:
+      '<svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C8.8 3 3 8.8 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.8A13 13 0 0 0 16 29c7.2 0 13-5.8 13-13S23.2 3 16 3Zm0 23.6c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1 1.1-3.9-.3-.4A10.6 10.6 0 1 1 16 26.6Zm5.9-7.9c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.5-1.6-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.2-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.3 5.1 4.5 2.5 1 3 .8 3.6.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z"/></svg>',
+  };
+
+  function socialUrl(v) {
+    const t = String(v || '').trim();
+    if (!t) return '';
+    return /^https?:\/\//i.test(t) ? t : 'https://' + t.replace(/^\/+/, '');
+  }
+
+  function socialItems(s) {
     const social = s.social || {};
-    const links = [
-      ['instagram', 'IG', 'إنستغرام'],
-      ['facebook', 'FB', 'فيسبوك'],
-      ['tiktok', 'TT', 'تيك توك'],
-    ].filter(([k]) => social[k]);
-    $('#socialLinks').innerHTML = links
-      .map(
-        ([k, short, label]) =>
-          `<a href="${esc(social[k])}" target="_blank" rel="noopener" title="${label}">${short}</a>`
-      )
-      .join('');
+    return [
+      ['instagram', 'إنستغرام', 'صفحتنا على إنستغرام'],
+      ['facebook', 'فيسبوك', 'صفحتنا على فيسبوك'],
+      ['tiktok', 'تيك توك', 'حسابنا على تيك توك'],
+    ]
+      .filter(([k]) => socialUrl(social[k]))
+      .map(([k, label, aria]) => ({ key: k, label, aria, href: socialUrl(social[k]) }));
+  }
+
+  function renderSocial() {
+    const s = state.settings || DEFAULT_SETTINGS;
+    const items = socialItems(s);
+    const channel = socialUrl(s.channel);
+
+    const foot = $('#socialLinks');
+    if (foot)
+      foot.innerHTML = items
+        .map(
+          (i) =>
+            `<a class="social-pill" href="${esc(i.href)}" target="_blank" rel="noopener noreferrer" aria-label="${i.aria}" title="${i.label}">${SOCIAL_ICONS[i.key] || ''}<span>${i.label}</span></a>`
+        )
+        .join('');
+
+    const block = $('#socialBlock');
+    if (block) block.hidden = items.length === 0;
+
+    const menu = $('#socialLinksMenu');
+    if (menu) {
+      const all = items
+        .map(
+          (i) =>
+            `<a href="${esc(i.href)}" target="_blank" rel="noopener noreferrer" aria-label="${i.aria}" title="${i.label}">${SOCIAL_ICONS[i.key] || ''}</a>`
+        )
+        .join('');
+      const ch = channel
+        ? `<a href="${esc(channel)}" target="_blank" rel="noopener noreferrer" aria-label="قناة واتساب" title="قناة واتساب">${SOCIAL_ICONS.whatsapp}</a>`
+        : '';
+      menu.innerHTML = all + ch;
+      menu.hidden = !(items.length || channel);
+    }
   }
 
   /* ----------------------- الأقسام ----------------------- */

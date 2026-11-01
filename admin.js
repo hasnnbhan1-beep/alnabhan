@@ -966,6 +966,12 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       .join('');
   }
 
+  function socialFix(v) {
+    const t = String(v || '').trim();
+    if (!t) return '';
+    return /^https?:\/\//i.test(t) ? t : 'https://' + t.replace(/^\/+/, '');
+  }
+
   $('#settingsForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = e.target;
@@ -1008,7 +1014,11 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       },
       about: g('about'),
       deliveryNote: g('deliveryNote'),
-      social: { instagram: g('instagram'), facebook: g('facebook'), tiktok: g('tiktok') },
+      social: {
+        instagram: socialFix(g('instagram')),
+        facebook: socialFix(g('facebook')),
+        tiktok: socialFix(g('tiktok')),
+      },
       features,
     };
 

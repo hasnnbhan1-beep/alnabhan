@@ -365,3 +365,5 @@ code{background:rgba(217,180,106,.13);border:1px solid rgba(217,180,106,.25);col
 #adminNetRetry{padding:.35rem .85rem;border-radius:100px;font-size:.75rem;font-weight:800;
   background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:inherit}
 #adminNetRetry:hover{background:rgba(255,255,255,.2)}
+
+.card-block .hint{margin:.35rem 0 1rem}

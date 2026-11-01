@@ -30,7 +30,29 @@
 <link rel="icon" type="image/png" href="mark-192.png" />
 <link rel="preload" as="image" href="uploads/hero.jpg" fetchpriority="high" />
 <link rel="preload" as="font" type="font/ttf" href="fonts/Tajawal-ExtraBold.ttf" crossorigin />
-<link rel="stylesheet" href="styles.css?v=6.0" />
+<link rel="stylesheet" href="styles.css?v=6.1" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ClothingStore",
+  "name": "النبهان للألبسة الأوروبية",
+  "alternateName": "AL NABHAN",
+  "url": "https://hasnnbhan1-beep.github.io/alnabhan/",
+  "telephone": "+963968866704",
+  "image": "https://hasnnbhan1-beep.github.io/alnabhan/mark-512.png",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "SY",
+    "addressRegion": "إدلب",
+    "addressLocality": "زردنا"
+  },
+  "sameAs": [
+    "https://www.facebook.com/adelnbhan",
+    "https://www.instagram.com/nbhan_nbhan1/",
+    "https://whatsapp.com/channel/0029VanIEPT5a243fjnCwW3J"
+  ]
+}
+</script>
 </head>
 <body class="loading">
 
@@ -107,6 +129,10 @@
     <div id="mobileCats"></div>
     <a href="#about">عن المتجر</a>
     <a href="#contact">تواصل معنا</a>
+    <div class="mobile-social">
+      <span>تابعونا</span>
+      <div class="social social-menu" id="socialLinksMenu" hidden></div>
+    </div>
   </div>
 </div>
 
@@ -328,7 +354,10 @@
         </span>
       </div>
       <p class="footer-tag" id="footerTag">أزياء أوروبية أصيلة — مختارة بعناية.</p>
-      <div class="social" id="socialLinks"></div>
+      <div class="social-block" id="socialBlock">
+        <span class="social-title">تابعونا</span>
+        <div class="social" id="socialLinks"></div>
+      </div>
     </div>
     <div>
       <h4>التسوق</h4>
@@ -589,6 +618,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="app.js?v=6.0"></script>
+<script src="app.js?v=6.1"></script>
 </body>
 </html>
