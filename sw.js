@@ -3,6 +3,7 @@
    يعطي: تحميل فوري، عمل بلا إنترنت، وتثبيت كتطبيق
    ========================================================= */
 const VERSION = 'nabhan-v6.0';
+const IMG_CACHE = 'nabhan-img-v1'; // صور المنتجات (روابط خارجية) للعمل بلا إنترنت
 const SHELL = [
   './',
   './index.html',
@@ -19,6 +20,15 @@ const SHELL = [
   './fonts/Tajawal-Bold.ttf',
   './fonts/Tajawal-ExtraBold.ttf',
 ];
+
+async function trimImages(cache) {
+  try {
+    const keys = await cache.keys();
+    if (keys.length > 240) {
+      for (const k of keys.slice(0, keys.length - 220)) await cache.delete(k);
+    }
+  } catch {}
+}
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
@@ -43,7 +53,33 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
+
+  // صور المنتجات من التخزين السحابي: تُحفظ محلياً لتعمل بلا إنترنت
+  if (url.origin !== self.location.origin) {
+    if (req.destination !== 'image') return;
+    event.respondWith(
+      caches.open(IMG_CACHE).then(async (c) => {
+        const hit = await c.match(req);
+        if (hit) {
+          fetch(req)
+            .then((res) => { if (res && (res.ok || res.type === 'opaque')) c.put(req, res.clone()).catch(() => {}); })
+            .catch(() => {});
+          return hit;
+        }
+        try {
+          const res = await fetch(req);
+          if (res && (res.ok || res.type === 'opaque')) {
+            const copy = res.clone();
+            c.put(req, copy).then(() => trimImages(c)).catch(() => {});
+          }
+          return res;
+        } catch (err) {
+          return new Response('', { status: 504 });
+        }
+      })
+    );
+    return;
+  }
 
   // لوحة تحكم المالك: بلا تخزين مؤقت إطلاقاً (بيانات حسّاسة)
   if (url.pathname.startsWith('./admin') || url.pathname.includes('/admin')) return;
