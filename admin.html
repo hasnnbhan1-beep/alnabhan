@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <link rel="apple-touch-icon" href="icon-180.png" />
 <link rel="icon" type="image/png" href="mark-192.png" />
-<link rel="stylesheet" href="admin.css" />
+<link rel="stylesheet" href="admin.css?v=4.2" />
 </head>
 <body>
 
@@ -281,21 +281,30 @@
         <div class="field"><label>رمز المنتج (اختياري)</label><input name="code" placeholder="NB-101" /></div>
       </div>
 
-      <div class="grid3">
-        <div class="field"><label>السعر *</label><input name="price" type="number" min="0" step="any" required placeholder="145" /></div>
-        <div class="field"><label>السعر قبل الخصم</label><input name="oldPrice" type="number" min="0" step="any" placeholder="190" /></div>
-        <div class="field"><label>شارة (اختياري)</label><input name="badge" placeholder="جديد / الأكثر طلباً" /></div>
+      <div class="price-box">
+        <div class="price-box-head">
+          <span class="price-lock">🔒</span>
+          <div>
+            <b>السعر — تحدّده أنت فقط</b>
+            <small>لا يستطيع أي زائر تعديله. السعر الذي تكتبه هنا هو ما يظهر للزبون ويُرسل مع طلب الواتساب.</small>
+          </div>
+        </div>
+        <div class="grid3">
+          <div class="field"><label>السعر * <span id="priceCurrencyLabel" class="cur-hint"></span></label><input name="price" type="number" min="0" step="any" inputmode="decimal" required placeholder="145" /></div>
+          <div class="field"><label>السعر قبل الخصم</label><input name="oldPrice" type="number" min="0" step="any" inputmode="decimal" placeholder="190" /></div>
+          <div class="field"><label>شارة (اختياري)</label><input name="badge" placeholder="جديد / الأكثر طلباً" /></div>
+        </div>
       </div>
 
       <div class="field"><label>الوصف</label><textarea name="description" rows="4" placeholder="خامة، قصّة، تفاصيل…"></textarea></div>
 
       <div class="field">
-        <label>الصور</label>
+        <label>الصور <small class="hint-inline">— حتى 10 صور، تُضغط تلقائياً قبل الرفع · اسحب الصور وأفلتها هنا</small></label>
         <div class="media-grid" id="imagesGrid"></div>
         <div class="upload-row">
           <label class="upload-btn">
             + رفع صور من الجهاز
-            <input type="file" id="imagesInput" accept="image/*" multiple hidden />
+            <input type="file" id="imagesInput" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden />
           </label>
           <input id="imageUrlInput" class="url-input" placeholder="أو ألصق رابط صورة https://…" />
           <button type="button" class="btn btn-glass btn-sm" id="addImageUrl">إضافة</button>
@@ -304,11 +313,11 @@
       </div>
 
       <div class="field">
-        <label>فيديو المنتج</label>
+        <label>فيديو المنتج <small class="hint-inline">— MP4 / WEBM / MOV حتى 85 م.ب</small></label>
         <div class="video-row" id="videoRow"></div>
         <div class="upload-row">
           <label class="upload-btn">
-            + رفع فيديو (MP4، حتى 60 م.ب)
+            + رفع فيديو من الجهاز
             <input type="file" id="videoInput" accept="video/mp4,video/webm,video/quicktime" hidden />
           </label>
           <input id="videoUrlInput" class="url-input" placeholder="أو رابط فيديو (يوتيوب/إنستغرام)" />
@@ -346,7 +355,7 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="admin.js"></script>
+<script src="admin.js?v=4.2"></script>
 <script>
   // رابط المتجر — يعمل على أي استضافة (جذر أو مجلد فرعي)
   (function initStoreUrl() {

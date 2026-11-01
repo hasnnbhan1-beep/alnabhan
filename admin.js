@@ -170,6 +170,11 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     state.products = data.products || [];
     $('#navProdCount').textContent = state.products.length;
     $('#waChip').textContent = 'واتساب: ' + (state.settings.phoneDisplay || state.settings.whatsapp);
+    const cl = $('#priceCurrencyLabel');
+    if (cl) {
+      const c = (state.settings && state.settings.currency) || { symbol: '$' };
+      cl.textContent = '(بالعملة: ' + (c.symbol || '$') + ')';
+    }
     buildCategorySelects();
     renderProducts();
     renderCats();
@@ -524,50 +529,196 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     });
   }
 
+  /* ============ رفع الوسائط إلى السحابة (رفع مباشر إلى Storage) ============ */
+  const MAX_VIDEO = 85 * 1024 * 1024;
+  const OK_IMG = /^image\/(jpeg|jpg|png|webp|gif)$/i;
+  const OK_VID = /^video\/(mp4|webm|quicktime|x-m4v)$/i;
+
+  const humanSize = (b) =>
+    b >= 1048576 ? (b / 1048576).toFixed(1) + ' م.ب' : Math.max(1, Math.round(b / 1024)) + ' ك.ب';
+
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(r.result);
+      r.onerror = () => reject(new Error('تعذّر قراءة الملف'));
+      r.readAsDataURL(blob);
+    });
+  }
+
+  // ضغط الصورة داخل المتصفح قبل الرفع (أسرع تحميلاً للزبائن)
+  function compressImageBlob(file, maxSide = 1600, quality = 0.85) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        let { width: w, height: h } = img;
+        const scale = Math.min(1, maxSide / Math.max(w, h));
+        w = Math.round(w * scale);
+        h = Math.round(h * scale);
+        const c = document.createElement('canvas');
+        c.width = w;
+        c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        URL.revokeObjectURL(url);
+        if (c.toBlob) c.toBlob((b) => (b ? resolve(b) : reject(new Error('تعذّر معالجة الصورة'))), 'image/jpeg', quality);
+        else {
+          const d = c.toDataURL('image/jpeg', quality);
+          resolve({ __dataUrl: d, size: d.length, type: 'image/jpeg' });
+        }
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        reject(new Error('صورة غير صالحة'));
+      };
+      img.src = url;
+    });
+  }
+
+  function putWithProgress(uploadUrl, blob, type, onProgress) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('PUT', uploadUrl, true);
+      xhr.setRequestHeader('content-type', type || 'application/octet-stream');
+      xhr.setRequestHeader('cache-control', 'max-age=31536000');
+      xhr.setRequestHeader('x-upsert', 'false');
+      if (xhr.upload && onProgress) {
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) onProgress(Math.min(99, Math.round((e.loaded / e.total) * 100)));
+        };
+      }
+      xhr.onload = () => {
+        if (xhr.status >= 200 && xhr.status < 300) resolve(xhr.responseText);
+        else reject(new Error('فشل الرفع (' + xhr.status + '): ' + String(xhr.responseText || '').slice(0, 120)));
+      };
+      xhr.onerror = () => reject(new Error('انقطع الاتصال أثناء الرفع — تحقّق من الإنترنت وحاول مجدداً'));
+      xhr.ontimeout = () => reject(new Error('انتهت مهلة الرفع — حاول مجدداً'));
+      xhr.timeout = 15 * 60 * 1000;
+      xhr.send(blob);
+    });
+  }
+
+  // يرفع ملفاً واحداً ويعيد رابطه العام، مع رجوع تلقائي للطريقة القديمة عند الحاجة
+  async function uploadOne(blob, name, type, onProgress) {
+    const mime = type || blob.type || 'application/octet-stream';
+    let sign = null;
+    try {
+      const r = await api('/api/admin/upload-url', {
+        method: 'POST',
+        body: { files: [{ name, type: mime, size: blob.size }] },
+      });
+      sign = (r.uploads || [])[0] || null;
+    } catch {
+      sign = null;
+    }
+    if (sign && sign.uploadUrl) {
+      await putWithProgress(sign.uploadUrl, blob, mime, onProgress);
+      return sign.publicUrl || sign.relative;
+    }
+    // رجوع احتياطي: رفع عبر الخادم بترميز base64
+    if (onProgress) onProgress(null);
+    const dataUrl = blob.__dataUrl || (await blobToDataUrl(blob));
+    const { urls } = await api('/api/admin/upload', { method: 'POST', body: { dataUrl, name } });
+    return urls[0];
+  }
+
   $('#imagesInput').addEventListener('change', async (e) => {
-    const files = Array.from(e.target.files || []);
+    const files = Array.from(e.target.files || []).filter((f) => {
+      if (!OK_IMG.test(f.type)) {
+        toast('ملف غير مدعوم: ' + (f.name || '') + ' — يُسمح بـ JPG/PNG/WEBP فقط', true);
+        return false;
+      }
+      return true;
+    });
     e.target.value = '';
     if (!files.length) return;
     const btn = $('#imagesInput').closest('.upload-btn');
     btn.classList.add('busy');
-    toast(`جارٍ رفع ${files.length} صورة…`);
+    let done = 0;
     try {
       for (const file of files) {
-        const dataUrl = await compressImage(file);
-        const { urls } = await api('/api/admin/upload', {
-          method: 'POST',
-          body: { dataUrl, name: file.name },
+        done++;
+        toast(`جارٍ تحضير الصورة ${done}/${files.length}…`);
+        const blob = await compressImageBlob(file);
+        const url = await uploadOne(blob, file.name.replace(/\.[^.]+$/, '') + '.jpg', 'image/jpeg', (p) => {
+          if (p != null) toast(`جارٍ رفع الصورة ${done}/${files.length} — ${p}%`);
         });
-        state.images.push(urls[0]);
+        state.images.push(url);
         renderImages();
       }
-      toast('تم رفع الصور ✓');
+      toast(`تم رفع ${files.length} صورة ✓ اضغط «حفظ المنتج» لتثبيتها`);
     } catch (err) {
-      toast(err.message, true);
+      toast(err.message || 'تعذّر رفع الصور', true);
     } finally {
       btn.classList.remove('busy');
     }
   });
 
+  // سحب الصور والفيديو وإفلاتهما داخل منطقة الوسائط
+  (function initDropZone() {
+    const zone = $('#productForm');
+    if (!zone) return;
+    let depth = 0;
+    zone.addEventListener('dragenter', (ev) => {
+      if (!ev.dataTransfer || !Array.from(ev.dataTransfer.types || []).includes('Files')) return;
+      depth++;
+      zone.classList.add('dropping');
+    });
+    zone.addEventListener('dragover', (ev) => {
+      if (ev.dataTransfer && Array.from(ev.dataTransfer.types || []).includes('Files')) ev.preventDefault();
+    });
+    zone.addEventListener('dragleave', () => {
+      depth = Math.max(0, depth - 1);
+      if (!depth) zone.classList.remove('dropping');
+    });
+    zone.addEventListener('drop', (ev) => {
+      const files = Array.from((ev.dataTransfer && ev.dataTransfer.files) || []);
+      if (!files.length) return;
+      ev.preventDefault();
+      depth = 0;
+      zone.classList.remove('dropping');
+      const imgs = files.filter((f) => OK_IMG.test(f.type));
+      const vids = files.filter((f) => OK_VID.test(f.type));
+      const other = files.filter((f) => !OK_IMG.test(f.type) && !OK_VID.test(f.type));
+      if (other.length) toast('تم تجاهل ملفات غير مدعومة: ' + other.map((f) => f.name).join(', '), true);
+      if (imgs.length) {
+        const dt = new DataTransfer();
+        imgs.forEach((f) => dt.items.add(f));
+        const inp = $('#imagesInput');
+        inp.files = dt.files;
+        inp.dispatchEvent(new Event('change'));
+      }
+      if (vids.length) {
+        const dt = new DataTransfer();
+        dt.items.add(vids[0]);
+        const inp = $('#videoInput');
+        inp.files = dt.files;
+        inp.dispatchEvent(new Event('change'));
+      }
+    });
+  })();
+
   $('#videoInput').addEventListener('change', async (e) => {
     const file = (e.target.files || [])[0];
     e.target.value = '';
     if (!file) return;
-    if (file.size > 60 * 1024 * 1024) return toast('حجم الفيديو أكبر من 60 ميغابايت', true);
+    if (!OK_VID.test(file.type)) return toast('صيغة الفيديو غير مدعومة — استخدم MP4 أو WEBM أو MOV', true);
+    if (file.size > MAX_VIDEO) return toast(`حجم الفيديو ${humanSize(file.size)} أكبر من الحد ${humanSize(MAX_VIDEO)}`, true);
     const btn = $('#videoInput').closest('.upload-btn');
     btn.classList.add('busy');
-    toast('جارٍ رفع الفيديو… قد يستغرق قليلاً');
+    toast(`جارٍ رفع الفيديو (${humanSize(file.size)})… لا تغلق الصفحة`);
     try {
-      const dataUrl = await readAsDataURL(file);
-      const { urls } = await api('/api/admin/upload', {
-        method: 'POST',
-        body: { dataUrl, name: file.name },
+      const url = await uploadOne(file, file.name, file.type, (p) => {
+        if (p != null) toast(`جارٍ رفع الفيديو — ${p}% من ${humanSize(file.size)}`);
       });
-      state.video = urls[0];
+      state.video = url;
       renderVideo();
-      toast('تم رفع الفيديو ✓');
+      toast('تم رفع الفيديو ✓ اضغط «حفظ المنتج» لتثبيته');
     } catch (err) {
-      toast(err.message, true);
+      toast(err.message || 'تعذّر رفع الفيديو', true);
     } finally {
       btn.classList.remove('busy');
     }
@@ -577,7 +728,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   $('#saveProduct').addEventListener('click', async () => {
     const f = $('#productForm');
     if (!f.name.value.trim()) return toast('اسم المنتج مطلوب', true);
-    if (f.price.value === '') return toast('السعر مطلوب', true);
+    if (f.price.value === '') return toast('السعر مطلوب — أنت وحدك من يحدّده', true);
+    if (!(Number(f.price.value) >= 0)) return toast('السعر يجب أن يكون رقماً صحيحاً', true);
     if (!f.category.value) return toast('اختر القسم', true);
     if (!state.images.length && !state.video) {
       if (!confirm('لم تضف أي صورة أو فيديو لهذا المنتج. المتابعة بدون وسائط؟')) return;
@@ -814,9 +966,11 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     if (!file) return;
     try {
       toast('جارٍ رفع صورة الواجهة…');
-      const dataUrl = await compressImage(file, 2000, 0.86);
-      const { urls } = await api('/api/admin/upload', { method: 'POST', body: { dataUrl, name: file.name } });
-      $('#heroPreview').src = urls[0];
+      const blob = await compressImageBlob(file, 2000, 0.86);
+      const url = await uploadOne(blob, file.name.replace(/\.[^.]+$/, '') + '.jpg', 'image/jpeg', (p) => {
+        if (p != null) toast('جارٍ رفع صورة الواجهة — ' + p + '%');
+      });
+      $('#heroPreview').src = url;
       toast('تم رفع الصورة — اضغط «حفظ الإعدادات» لتثبيتها');
     } catch (err) {
       toast(err.message, true);
