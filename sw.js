@@ -2,7 +2,7 @@
    النبهان — Service Worker
    يعطي: تحميل فوري، عمل بلا إنترنت، وتثبيت كتطبيق
    ========================================================= */
-const VERSION = 'nabhan-v8.9';
+const VERSION = 'nabhan-v9.1';
 const IMG_CACHE = 'nabhan-img-v1'; // صور المنتجات (روابط خارجية) للعمل بلا إنترنت
 const SHELL = [
   './',
@@ -21,7 +21,11 @@ const SHELL = [
   './icon-192.png',
   './icon-512.png',
   './icon-180.png',
-  './brand-card.png',
+  './brand-card.webp',
+  './brand-stage.webp',
+  './uploads/hero.webp',
+  './fonts/Tajawal-Bold.woff2',
+  './fonts/Tajawal-ExtraBold.woff2',
   './brand-stage.png',
   './logo-192.png',
   './logo-512.png',
