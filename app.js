@@ -80,6 +80,40 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
   const catName = (id) => (state.categories.find((c) => c.id === id) || {}).name || 'منتجات';
   const productById = (id) => state.products.find((p) => p.id === id);
+  /* ============ أحاديث تظهر على فيديوهات المنتجات ============ */
+  const HADITHS = [
+    { text: 'إنَّ اللهَ جميلٌ يحبُّ الجمالَ', source: 'رواه مسلم' },
+    { text: 'كُلوا واشرَبوا وتصدَّقوا والبَسوا في غيرِ سَرَفٍ ولا مَخيلةٍ', source: 'رواه النسائي وأحمد' },
+    { text: 'إنَّ اللهَ لا ينظُرُ إلى صُوَرِكم وأموالِكم، ولكن ينظُرُ إلى قلوبِكم وأعمالِكم', source: 'رواه مسلم' },
+    { text: 'البِرُّ حُسنُ الخُلُقِ', source: 'رواه مسلم' },
+    {
+      text: 'مَن لبِسَ ثوبًا فقال: الحمدُ لله الذي كساني هذا ورزقَنيه من غيرِ حولٍ منِّي ولا قوَّةٍ، غُفِرَ له ما تقدَّم من ذنبِه',
+      source: 'رواه أبو داود والترمذي',
+    },
+  ];
+
+  function hashStr(str) {
+    let h = 0;
+    for (let i = 0; i < String(str).length; i++) h = (h * 31 + String(str).charCodeAt(i)) | 0;
+    return Math.abs(h);
+  }
+
+  function hadithFor(seed) {
+    const s = state.settings || {};
+    const custom = String(s.videoHadith || '').trim();
+    if (custom) return { text: custom, source: String(s.videoHadithSource || '').trim() };
+    return HADITHS[hashStr(seed) % HADITHS.length] || HADITHS[0];
+  }
+
+  function hadithHTML(seed) {
+    const h = hadithFor(seed);
+    return `<div class="hadith-cap" role="note">
+      <span class="hadith-badge">قال رسول الله ﷺ</span>
+      <p class="hadith-text">«${esc(h.text)}»</p>
+      ${h.source ? `<span class="hadith-src">${esc(h.source)}</span>` : ''}
+    </div>`;
+  }
+
   const videosOf = (p) => {
     if (Array.isArray(p.videos) && p.videos.length) return p.videos.filter(Boolean);
     return p.video ? [p.video] : [];
@@ -770,7 +804,15 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     const main = $('#pdpMain');
     main.innerHTML =
       item.type === 'video'
-        ? `<video src="${esc(item.src)}" controls playsinline preload="metadata"></video>`
+        ? `<div class="pdp-video-wrap">
+             <video src="${esc(item.src)}" controls muted playsinline preload="metadata"></video>
+             ${hadithHTML(p.id + ':' + index)}
+             <button class="vid-sound" type="button" aria-label="تشغيل الصوت" aria-pressed="false">
+               <svg class="ico-off" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 9v6h3.5L12 19V5L7.5 9H4Zm11.2 3 2.4 2.4-1.4 1.4-2.4-2.4-2.4 2.4-1.4-1.4 2.4-2.4-2.4-2.4 1.4-1.4 2.4 2.4 2.4-2.4 1.4 1.4-2.4 2.4Z"/></svg>
+               <svg class="ico-on" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 9v6h3.5L12 19V5L7.5 9H4Zm10.5-2.3v2.1a4.2 4.2 0 0 1 0 6.4v2.1a6.2 6.2 0 0 0 0-10.6Zm0-3.4v2.05a7.3 7.3 0 0 1 0 13.3v2.05a9.3 9.3 0 0 0 0-17.4Z"/></svg>
+               <span>الصوت</span>
+             </button>
+           </div>`
         : `<img src="${esc(item.src)}" alt="${esc(p.name)}" />`;
 
     const thumbs = media
@@ -785,6 +827,28 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     const extLink = p.videoUrl
       ? `<a class="link-btn" href="${esc(p.videoUrl)}" target="_blank" rel="noopener">شاهد الفيديو ↗</a>`
       : '';
+    const vid = main.querySelector('video');
+    const sndBtn = main.querySelector('.vid-sound');
+    if (vid) {
+      vid.muted = true;
+      vid.defaultMuted = true;
+      vid.setAttribute('muted', '');
+      vid.volume = 1;
+      // بعض المتصفحات تفكّ الكتم عند التشغيل — نُعيده دائماً
+      vid.addEventListener('play', () => {
+        if (!sndBtn || !sndBtn.classList.contains('on')) vid.muted = true;
+      });
+    }
+    if (sndBtn && vid)
+      sndBtn.addEventListener('click', () => {
+        const on = !vid.muted;
+        vid.muted = on;
+        if (!on) vid.volume = 1;
+        sndBtn.classList.toggle('on', !on);
+        sndBtn.setAttribute('aria-pressed', String(!on));
+        sndBtn.querySelector('span').textContent = on ? 'الصوت' : 'إلغاء الصوت';
+      });
+
     $('#pdpThumbs').innerHTML = thumbs + extLink;
     $$('[data-media]').forEach((b) =>
       b.addEventListener('click', () => renderMedia(p, Number(b.dataset.media)))

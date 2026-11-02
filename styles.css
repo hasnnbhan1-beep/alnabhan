@@ -1128,3 +1128,54 @@ img.brand-mark{
 /* صورة المشهد في الواجهة: تعبئة كاملة بالهوية */
 .stage-img img.brand-mark{object-fit:cover !important;padding:0;background:none}
 .stage-img img{transform:scale(1.01)}
+
+/* ===================== حديث على فيديو المنتج ===================== */
+.pdp-video-wrap{position:relative;width:100%;height:100%;display:grid;place-items:center;background:#0a0206}
+.pdp-video-wrap video{width:100%;height:100%;object-fit:contain;display:block}
+
+.hadith-cap{
+  position:absolute;top:.9rem;inset-inline:0;z-index:3;pointer-events:none;
+  width:fit-content;max-width:min(92%,520px);margin-inline:auto;
+  padding:.7rem 1.1rem .8rem;text-align:center;
+  background:linear-gradient(180deg,rgba(10,3,8,.90),rgba(12,4,10,.80));
+  backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
+  border:1px solid rgba(255,235,240,.16);border-radius:16px;
+  box-shadow:0 16px 40px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12);
+  animation:hadithIn .8s var(--ease-out) both;
+}
+@keyframes hadithIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+.hadith-badge{
+  display:inline-block;font-size:.6rem;font-weight:800;letter-spacing:.06em;
+  color:#0b0409;background:linear-gradient(135deg,var(--gold-2),var(--gold-deep));
+  padding:.16rem .6rem;border-radius:100px;margin-bottom:.4rem;
+  box-shadow:0 4px 14px rgba(211,58,88,.35);
+}
+.hadith-text{
+  font-family:var(--font-ar);font-size:.86rem;font-weight:700;line-height:1.65;
+  color:#fff;margin:0;text-shadow:0 2px 12px rgba(0,0,0,.85);
+  max-width:34ch;margin-inline:auto;
+}
+.hadith-src{display:block;margin-top:.25rem;font-size:.64rem;color:rgba(255,255,255,.72);letter-spacing:.02em}
+
+.vid-sound{
+  position:absolute;bottom:3.3rem;inset-inline-start:.7rem;z-index:4;
+  display:inline-flex;align-items:center;gap:.35rem;
+  padding:.4rem .7rem;border-radius:100px;font-size:.7rem;font-weight:700;
+  background:rgba(9,3,7,.66);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,235,240,.28);color:#fff;
+  transition:background .3s,color .3s,transform .3s var(--ease-out),border-color .3s;
+}
+.vid-sound .ico-on{display:none}
+.vid-sound.on{background:linear-gradient(135deg,var(--gold-2),var(--gold-deep));color:#1c0511;border-color:transparent}
+.vid-sound.on .ico-on{display:block}
+.vid-sound.on .ico-off{display:none}
+.vid-sound:hover{transform:translateY(-2px)}
+.vid-sound:focus-visible{outline:2px solid var(--gold-2);outline-offset:2px}
+
+@media (max-width:760px){
+  .hadith-cap{top:.7rem;padding:.6rem .8rem .7rem;border-radius:14px;max-width:94%}
+  .hadith-text{font-size:.78rem;max-width:30ch}
+  .hadith-badge{font-size:.56rem}
+  .hadith-src{font-size:.6rem}
+  .vid-sound{bottom:3rem;inset-inline-start:.5rem;padding:.34rem .6rem;font-size:.66rem}
+}
