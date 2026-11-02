@@ -11,14 +11,14 @@
 <meta property="og:locale" content="ar_SY" />
 <meta property="og:title" content="النبهان للألبسة الأوروبية | أزياء أوروبية أصيلة" />
 <meta property="og:description" content="أزياء أوروبية أصيلة — نسائي، رجالي، أطفال وإكسسوارات. أسعار واضحة، طلب مباشر عبر واتساب، وتوصيل لجميع المحافظات." />
-<meta property="og:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.5" />
+<meta property="og:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.6" />
 <meta property="og:image:width" content="1024" />
 <meta property="og:image:height" content="1024" />
 <meta property="og:url" content="https://hasnnbhan1-beep.github.io/alnabhan/" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="النبهان للألبسة الأوروبية" />
 <meta name="twitter:description" content="أزياء أوروبية أصيلة — اطلب مباشرة عبر واتساب." />
-<meta name="twitter:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.5" />
+<meta name="twitter:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.6" />
 
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -30,7 +30,7 @@
 <link rel="icon" type="image/png" href="mark-192.png" />
 <link rel="preload" as="image" href="uploads/hero.jpg" fetchpriority="high" />
 <link rel="preload" as="font" type="font/ttf" href="fonts/Tajawal-ExtraBold.ttf" crossorigin />
-<link rel="stylesheet" href="styles.css?v=8.5" />
+<link rel="stylesheet" href="styles.css?v=8.6" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -101,9 +101,11 @@
       <button class="icon-btn" id="searchBtn" aria-label="بحث">
         <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="m16.5 16.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
       </button>
-      <button class="install-btn" id="installBtn" hidden>
-        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 20h14" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span>ثبّت التطبيق</span>
+      <button class="install-btn" id="installBtn" hidden aria-label="تثبيت التطبيق">
+        <span class="install-ico">
+          <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path d="M12 3.6v10.2m0 0 3.7-3.7M12 13.8 8.3 10.1M4.8 17.2v1.6a1.8 1.8 0 0 0 1.8 1.8h10.8a1.8 1.8 0 0 0 1.8-1.8v-1.6" stroke="currentColor" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="install-txt">ثبّت التطبيق</span>
       </button>
       <button class="icon-btn cart-btn" id="cartBtn" aria-label="سلة الطلبات">
         <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 7h12l-1.2 12.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 7Z" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M9 7V5.6A3 3 0 0 1 12 2.6a3 3 0 0 1 3 3V7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
@@ -190,7 +192,7 @@
         <div class="stage">
           <div class="stage-ring"></div>
           <div class="stage-card" id="stageCard">
-            <div class="stage-img"><img src="brand-stage.png?v=8.5" alt="النبهان" id="stageImg" class="brand-mark" /></div>
+            <div class="stage-img"><img src="brand-stage.png?v=8.6" alt="النبهان" id="stageImg" class="brand-mark" /></div>
             <div class="stage-shine"></div>
           </div>
           <div class="float-chip chip-a"><span class="chip-ico">✦</span> قطع مختارة بعناية</div>
@@ -323,7 +325,7 @@
     <div class="wrap about-grid">
       <div class="about-media reveal">
         <div class="about-frame">
-          <img src="brand-card.png?v=8.5" alt="النبهان للألبسة الأوروبية" loading="lazy" class="brand-mark" />
+          <img src="brand-card.png?v=8.6" alt="النبهان للألبسة الأوروبية" loading="lazy" class="brand-mark" />
         </div>
         <div class="about-badge">
           <b>+1200</b>
@@ -416,6 +418,24 @@
     <span class="footer-note">تطبيق تسوّق ذكي — صُنع بعناية.</span>
   </div>
 </footer>
+
+<!-- ===================== نافذة تثبيت التطبيق ===================== -->
+<div class="share-modal" id="installSheet" hidden>
+  <div class="share-scrim" data-install-close></div>
+  <div class="share-sheet install-sheet" role="dialog" aria-modal="true" aria-labelledby="installTitle">
+    <span class="share-handle" aria-hidden="true"></span>
+    <div class="share-head">
+      <h3 id="installTitle">ثبّت تطبيق النبهان</h3>
+      <button class="share-x" data-install-close aria-label="إغلاق">✕</button>
+    </div>
+    <div class="install-body">
+      <div class="install-badge"><img src="icon-192.png" alt="النبهان" width="64" height="64" /></div>
+      <p class="install-sub">خلي المتجر على شاشة جوالك — يفتح أسرع، ويشتغل حتى بدون إنترنت.</p>
+      <button class="btn btn-gold btn-block install-now" id="installNow" hidden>تثبيت الآن</button>
+      <ol class="install-steps" id="installSteps"></ol>
+    </div>
+  </div>
+</div>
 
 <!-- ===================== زر واتساب العائم ===================== -->
 <a class="wa-float" id="waFloat" href="#" aria-label="تواصل عبر واتساب">
@@ -634,6 +654,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="app.js?v=8.5"></script>
+<script src="app.js?v=8.6"></script>
 </body>
 </html>

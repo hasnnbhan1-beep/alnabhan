@@ -1331,6 +1331,63 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
   }
 
   /* ----------------------- التثبيت والسرعة ----------------------- */
+  let installPrompt = null;   // حدث التثبيت الأصلي (كروم/أندرويد)
+  let installBound = false;
+
+  function installSteps() {
+    const ua = navigator.userAgent || '';
+    const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const isAndroid = /Android/i.test(ua);
+    const icon = (p) =>
+      `<span class="step-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg></span>`;
+    if (isIOS) {
+      return [
+        [icon('<path d="M12 16V4m0 0 4 4m-4-4L8 8"/><path d="M5 15v3.5A1.5 1.5 0 0 0 6.5 20h11A1.5 1.5 0 0 0 19 18.5V15"/>'), 'اضغط زر المشاركة <b>⬆︎</b> في أسفل سفاري.'],
+        [icon('<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M12 9v6m0 0 2.4-2.4M12 15l-2.4-2.4"/>'), 'اختر <b>«إضافة إلى الشاشة الرئيسية»</b>.'],
+        [icon('<path d="m5 12.5 4.5 4.5L19 7.5"/>'), 'اضغط <b>«إضافة»</b> — بيصير عندك تطبيق النبهان على الشاشة.'],
+      ];
+    }
+    if (isAndroid) {
+      return [
+        [icon('<circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/>'), 'اضغط قائمة المتصفح <b>⋮</b> أعلى اليمين.'],
+        [icon('<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M12 9v6m0 0 2.4-2.4M12 15l-2.4-2.4"/>'), 'اختر <b>«تثبيت التطبيق»</b> أو «إضافة إلى الشاشة الرئيسية».'],
+        [icon('<path d="m5 12.5 4.5 4.5L19 7.5"/>'), 'أكّد <b>«تثبيت»</b> — التطبيق يصير بأيقونته على جوالك.'],
+      ];
+    }
+    return [
+      [icon('<path d="M4 7h16M4 12h16M4 17h10"/>'), 'من متصفح الكمبيوتر: افتح قائمة المتصفح <b>⋮</b>.'],
+      [icon('<rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M12 9v6m0 0 2.4-2.4M12 15l-2.4-2.4"/>'), 'اختر <b>«تثبيت النبهان»</b> أو أيقونة التثبيت في شريط العنوان.'],
+      [icon('<path d="m5 12.5 4.5 4.5L19 7.5"/>'), 'اضغط <b>«تثبيت»</b> — يفتح كتطبيق مستقل بنافذته.'],
+    ];
+  }
+
+  function openInstallSheet() {
+    const sheet = $('#installSheet');
+    if (!sheet) return;
+    const steps = $('#installSteps');
+    if (steps) steps.innerHTML = installSteps().map(([ico, txt]) => `<li>${ico}<span>${txt}</span></li>`).join('');
+    const now = $('#installNow');
+    if (now) {
+      now.hidden = !installPrompt;
+      now.onclick = async () => {
+        if (!installPrompt) return;
+        const ev = installPrompt;
+        installPrompt = null;
+        ev.prompt();
+        const choice = await ev.userChoice.catch(() => null);
+        closeInstallSheet();
+        if (choice && choice.outcome === 'accepted') toast('تم تثبيت تطبيق النبهان ✓');
+      };
+    }
+    sheet.hidden = false;
+    document.body.classList.add('locked');
+  }
+  function closeInstallSheet() {
+    const sheet = $('#installSheet');
+    if (sheet) sheet.hidden = true;
+    if (!$('#productModal') || $('#productModal').hidden) document.body.classList.remove('locked');
+  }
+
   function initPWA() {
     if ('serviceWorker' in navigator) {
       const reg = () => navigator.serviceWorker.register('sw.js').catch(() => {});
@@ -1338,43 +1395,53 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       else window.addEventListener('load', reg, { once: true });
     }
 
-    let deferred = null;
-    const btn = document.getElementById('installBtn');
+    const btn = $('#installBtn');
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+    // الزر ظاهر دائماً في الواجهة (إلا إذا التطبيق مثبّت أصلاً)
+    if (btn && !standalone) btn.hidden = false;
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
-      deferred = e;
-      if (btn) btn.hidden = false;
+      installPrompt = e;
+      if (btn && !standalone) btn.hidden = false;
     });
-
-    if (btn) {
-      btn.addEventListener('click', async () => {
-        if (!deferred) {
-          toast('لتثبيت التطبيق: افتح قائمة المتصفح ثم «إضافة إلى الشاشة الرئيسية»');
-          return;
-        }
-        deferred.prompt();
-        const choice = await deferred.userChoice.catch(() => null);
-        if (choice && choice.outcome === 'accepted') toast('تم تثبيت تطبيق النبهان ✓');
-        deferred = null;
-        btn.hidden = true;
-      });
-    }
 
     window.addEventListener('appinstalled', () => {
+      installPrompt = null;
       if (btn) btn.hidden = true;
-      toast('تم تثبيت التطبيق على جهازك ✓');
+      closeInstallSheet();
+      toast('تم تثبيت تطبيق النبهان على جهازك ✓');
     });
 
-    // إخفاء الزر إذا كان التطبيق مثبتاً أصلاً
-    const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-    if (standalone && btn) btn.hidden = true;
+    const fire = async () => {
+      if (installPrompt) {
+        const ev = installPrompt;
+        installPrompt = null;
+        try {
+          ev.prompt();
+          const choice = await ev.userChoice.catch(() => null);
+          if (choice && choice.outcome === 'accepted') {
+            toast('تم تثبيت تطبيق النبهان ✓');
+            if (btn) btn.hidden = true;
+          }
+          return;
+        } catch (_) { /* نكمل إلى التعليمات */ }
+      }
+      openInstallSheet();
+    };
 
-    // آيفون وبعض المتصفحات لا تدعم beforeinstallprompt → نظهر الزر مع تعليمات
-    if (btn && !standalone) {
-      setTimeout(() => {
-        if (btn.hidden) btn.hidden = false;
-      }, 4200);
+    if (btn && !installBound) {
+      installBound = true;
+      btn.hidden = standalone;
+      btn.addEventListener('click', (e) => { e.preventDefault(); fire(); });
     }
+
+    $$('[data-install-close]').forEach((el) => el.addEventListener('click', closeInstallSheet));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeInstallSheet();
+    });
   }
 
 
