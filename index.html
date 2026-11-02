@@ -11,14 +11,14 @@
 <meta property="og:locale" content="ar_SY" />
 <meta property="og:title" content="النبهان للألبسة الأوروبية | أزياء أوروبية أصيلة" />
 <meta property="og:description" content="أزياء أوروبية أصيلة — نسائي، رجالي، أطفال وإكسسوارات. أسعار واضحة، طلب مباشر عبر واتساب، وتوصيل لجميع المحافظات." />
-<meta property="og:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.2" />
+<meta property="og:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.3" />
 <meta property="og:image:width" content="1024" />
 <meta property="og:image:height" content="1024" />
 <meta property="og:url" content="https://hasnnbhan1-beep.github.io/alnabhan/" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="النبهان للألبسة الأوروبية" />
 <meta name="twitter:description" content="أزياء أوروبية أصيلة — اطلب مباشرة عبر واتساب." />
-<meta name="twitter:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.2" />
+<meta name="twitter:image" content="https://hasnnbhan1-beep.github.io/alnabhan/brand-card.png?v=8.3" />
 
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -30,7 +30,7 @@
 <link rel="icon" type="image/png" href="mark-192.png" />
 <link rel="preload" as="image" href="uploads/hero.jpg" fetchpriority="high" />
 <link rel="preload" as="font" type="font/ttf" href="fonts/Tajawal-ExtraBold.ttf" crossorigin />
-<link rel="stylesheet" href="styles.css?v=8.2" />
+<link rel="stylesheet" href="styles.css?v=8.3" />
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -91,7 +91,10 @@
     </a>
 
     <nav class="nav" id="mainNav">
-      <a href="#products" class="nav-link active" data-cat="all">كل المنتجات</a>
+      <a href="#hero" class="nav-link active">الرئيسية</a>
+      <a href="#categories" class="nav-link">الأقسام</a>
+      <a href="#about" class="nav-link">عن المتجر</a>
+      <a href="#contact" class="nav-link">تواصل معنا</a>
     </nav>
 
     <div class="header-actions">
@@ -117,6 +120,14 @@
     </div>
   </div>
 </header>
+
+<!-- ===================== شريط الأقسام (أعلى الواجهة) ===================== -->
+<nav class="cat-bar" id="catBar" aria-label="أقسام المتجر">
+  <div class="cat-bar-inner">
+    <span class="cat-bar-label"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>الأقسام</span>
+    <div class="cat-track" id="catBarTrack" role="list"></div>
+  </div>
+</nav>
 
 <!-- قائمة الجوال -->
 <div class="mobile-menu" id="mobileMenu" hidden>
@@ -179,7 +190,7 @@
         <div class="stage">
           <div class="stage-ring"></div>
           <div class="stage-card" id="stageCard">
-            <div class="stage-img"><img src="brand-stage.png?v=8.2" alt="النبهان" id="stageImg" class="brand-mark" /></div>
+            <div class="stage-img"><img src="brand-stage.png?v=8.3" alt="النبهان" id="stageImg" class="brand-mark" /></div>
             <div class="stage-shine"></div>
           </div>
           <div class="float-chip chip-a"><span class="chip-ico">✦</span> قطع مختارة بعناية</div>
@@ -198,6 +209,18 @@
     </div>
   </section>
 
+  <!-- ===================== الأقسام ===================== -->
+  <section class="section" id="categories">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">تسوّق حسب القسم</p>
+        <h2 class="section-title">مجموعاتنا</h2>
+        <p class="section-sub">مجموعات مختارة بعناية — كل قطعة فيها بذوق واحد.</p>
+      </div>
+      <div class="cat-grid reveal" id="catGrid"></div>
+    </div>
+  </section>
+
   <!-- ===================== شريط متحرك ===================== -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
@@ -211,18 +234,6 @@
   <!-- ===================== شريط الثقة ===================== -->
   <section class="features" id="features">
     <div class="wrap features-grid" id="featuresGrid"></div>
-  </section>
-
-  <!-- ===================== الأقسام ===================== -->
-  <section class="section" id="categories">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <p class="eyebrow">تسوّق حسب القسم</p>
-        <h2 class="section-title">مجموعاتنا</h2>
-        <p class="section-sub">مجموعات مختارة بعناية — كل قطعة فيها بذوق واحد.</p>
-      </div>
-      <div class="cat-grid reveal" id="catGrid"></div>
-    </div>
   </section>
 
 
@@ -312,7 +323,7 @@
     <div class="wrap about-grid">
       <div class="about-media reveal">
         <div class="about-frame">
-          <img src="brand-card.png?v=8.2" alt="النبهان للألبسة الأوروبية" loading="lazy" class="brand-mark" />
+          <img src="brand-card.png?v=8.3" alt="النبهان للألبسة الأوروبية" loading="lazy" class="brand-mark" />
         </div>
         <div class="about-badge">
           <b>+1200</b>
@@ -624,6 +635,6 @@
 
 <div class="toast" id="toast" hidden></div>
 
-<script src="app.js?v=8.2"></script>
+<script src="app.js?v=8.3"></script>
 </body>
 </html>

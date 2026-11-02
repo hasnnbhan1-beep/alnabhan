@@ -556,14 +556,27 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     return p ? p.images[0] : PLACEHOLDER;
   }
 
+  const CAT_ICONS = [
+    'M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z',
+    'M12 5.2a1.9 1.9 0 1 1-1.9 1.9M12 9 3.2 14.6V17h17.6v-2.4L12 9Z',
+    'M8.4 4 4 6.6l1.6 3.6L8 9.2V20h8V9.2l2.4 1L20 6.6 15.6 4 12 6 8.4 4Z',
+    'M9.5 6h5l2.5 1.8-1.3 2.2L14 9.2V18h-4V9.2L8.3 10 7 7.8 9.5 6Z',
+    'M7 8h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2Zm2 0V6.2a3 3 0 0 1 6 0V8',
+    'M3.5 17.5h11a5.5 5.5 0 0 0 5.2-3.7l.3-1-3.6-1.4-2.4 1.1L9 8.2H3.5v9.3ZM3.5 17.5h17',
+  ];
+  const catIcon = (i) =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${CAT_ICONS[i % CAT_ICONS.length]}"/></svg>`;
+
   function renderCategories() {
-    // روابط الترويسة
-    const nav = $('#mainNav');
-    nav.innerHTML =
-      `<a href="#products" class="nav-link active" data-cat="all">كل المنتجات</a>` +
-      state.categories
-        .map((c) => `<a href="#products" class="nav-link" data-cat="${esc(c.id)}">${esc(c.name)}</a>`)
-        .join('');
+    // شريط الأقسام أعلى الواجهة
+    const track = $('#catBarTrack');
+    if (track) {
+      track.innerHTML =
+        `<a href="#products" class="cat-link active" role="listitem" data-cat="all">${catIcon(0)}كل الأقسام</a>` +
+        state.categories
+          .map((c, i) => `<a href="#products" class="cat-link" role="listitem" data-cat="${esc(c.id)}">${catIcon(i + 1)}${esc(c.name)}</a>`)
+          .join('');
+    }
 
     $('#mobileCats').innerHTML = state.categories
       .map((c) => `<a href="#products" data-cat="${esc(c.id)}">${esc(c.name)}</a>`)
@@ -572,10 +585,15 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     // بطاقات الأقسام
     $('#catGrid').innerHTML = state.categories
       .slice(0, 8)
-      .map((c) => {
+      .map((c, i) => {
         const count = state.products.filter((p) => p.category === c.id).length;
+        const img = catImage(c.id);
+        const media =
+          img === PLACEHOLDER
+            ? `<span class="cat-ph">${catIcon(i + 1)}</span>`
+            : `<img src="${esc(img)}" alt="${esc(c.name)}" loading="lazy" />`;
         return `<a href="#products" class="cat-card" data-cat="${esc(c.id)}">
-          <img src="${esc(catImage(c.id))}" alt="${esc(c.name)}" loading="lazy" />
+          ${media}
           <div class="cat-label"><strong>${esc(c.name)}</strong><span>${count > 0 ? count + ' قطعة' : 'قريباً'}</span></div>
         </a>`;
       })
@@ -616,7 +634,13 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
   function updateChips() {
     $$('[data-chip]').forEach((b) => b.classList.toggle('active', b.dataset.chip === state.filter));
-    $$('.nav-link').forEach((a) => a.classList.toggle('active', a.dataset.cat === state.filter));
+    $$('.nav-link[data-cat]').forEach((a) => a.classList.toggle('active', a.dataset.cat === state.filter));
+    $$('.cat-link').forEach((a) => {
+      const on = a.dataset.cat === state.filter;
+      a.classList.toggle('active', on);
+      if (on) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
   }
 
   /* ----------------------- شبكة المنتجات ----------------------- */
