@@ -1,0 +1,5 @@
+Contact: https://wa.me/963968866704
+Expires: 2027-12-31T23:59:00.000Z
+Preferred-Languages: ar, en
+Canonical: https://hasnnbhan1-beep.github.io/alnabhan/.well-known/security.txt
+Policy: https://hasnnbhan1-beep.github.io/alnabhan/
