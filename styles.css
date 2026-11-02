@@ -361,7 +361,7 @@ body.has-cursor .cursor-glow{opacity:1}
 .chip-ico{color:var(--gold);font-size:1rem}
 .chip-ico.wa{color:var(--wa)}
 .chip-a{top:3%;inset-inline-start:2%;animation:chipFloat 6s ease-in-out infinite}
-.chip-b{bottom:5%;inset-inline-end:-9%;animation:chipFloat 7s ease-in-out .8s infinite}
+.chip-b{bottom:-11%;inset-inline-end:-6%;animation:chipFloat 7s ease-in-out .8s infinite}
 .chip-c{display:none}
 @keyframes chipFloat{0%,100%{transform:translateZ(120px) translateY(0)}50%{transform:translateZ(120px) translateY(-12px)}}
 
@@ -769,7 +769,7 @@ body.has-cursor .cursor-glow{opacity:1}
 }
 @media (max-width:1000px){
   .hero-inner{grid-template-columns:1fr;gap:3rem}
-  .hero-art{order:-1;min-height:340px}
+  .hero-art{order:-1;min-height:340px;padding-bottom:2.2rem}
   .stage{width:min(300px,70%)}
   .hero-copy{text-align:center}
   .hero-kicker{margin-inline:auto}
@@ -809,9 +809,9 @@ body.has-cursor .cursor-glow{opacity:1}
   .float-chip{font-size:.7rem;padding:.5rem .75rem}
   .chip-a{display:none}
   .chip-c{display:none}
-  .chip-b{bottom:-5%;inset-inline-end:3%;font-size:.66rem;padding:.45rem .7rem}
+  .chip-b{bottom:-17%;inset-inline-end:6%;font-size:.66rem;padding:.45rem .7rem}
   .stage{width:min(248px,72%)}
-  .hero-art{min-height:300px}
+  .hero-art{min-height:300px;padding-bottom:1.9rem}
   .pcard-body{padding:.75rem .8rem .9rem}
   .pcard-title{font-size:.88rem}
   .pcard-cta{font-size:.78rem;padding:.62rem .5rem;min-height:44px}
