@@ -1301,3 +1301,15 @@ img.brand-mark{
   .vid-sound{bottom:4.3rem;inset-inline-start:.55rem;padding:.42rem;width:34px;height:34px;justify-content:center;border-radius:50%}
   .vid-sound span{display:none}
 }
+
+/* ======================= وضع التطبيق المثبّت (Standalone) ======================= */
+html{overscroll-behavior-y:contain}
+@media (display-mode: standalone), (display-mode: minimal-ui){
+  body{user-select:none;-webkit-user-select:none}
+  input,textarea,select,.pdp-desc,.about-copy{user-select:text;-webkit-user-select:text}
+  .header{padding-top:env(safe-area-inset-top)}
+  .cat-bar{top:calc(var(--header-h) + env(safe-area-inset-top))}
+  .hero{min-height:calc(100svh - var(--header-h) - var(--catbar-h) - env(safe-area-inset-top))}
+  .section{scroll-margin-top:calc(var(--header-h) + var(--catbar-h) + env(safe-area-inset-top) + 10px)}
+  .install-btn{display:none !important}
+}
