@@ -149,7 +149,10 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     currency: { symbol: '$', code: 'USD', position: 'before' },
     secondary: { enabled: false, symbol: 'ل.س', rate: 0 },
     hero: { image: '', kicker: '', title: 'النبهان', titleAccent: '', subtitle: '', cta: 'تسوّق المجموعة' },
-    features: [],
+    features: [
+      { title: 'خامات أوروبية أصلية', text: 'قطع مختارة من موردين موثوقين' },
+      { title: 'توصيل لكل المحافظات', text: 'خلال 2–4 أيام عمل' },
+    ],
     social: {
       instagram: 'https://www.instagram.com/nbhan_nbhan1/',
       facebook: 'https://www.facebook.com/adelnbhan',
@@ -810,7 +813,7 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
              <button class="vid-sound" type="button" aria-label="تشغيل الصوت" aria-pressed="false">
                <svg class="ico-off" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 9v6h3.5L12 19V5L7.5 9H4Zm11.2 3 2.4 2.4-1.4 1.4-2.4-2.4-2.4 2.4-1.4-1.4 2.4-2.4-2.4-2.4 1.4-1.4 2.4 2.4 2.4-2.4 1.4 1.4-2.4 2.4Z"/></svg>
                <svg class="ico-on" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 9v6h3.5L12 19V5L7.5 9H4Zm10.5-2.3v2.1a4.2 4.2 0 0 1 0 6.4v2.1a6.2 6.2 0 0 0 0-10.6Zm0-3.4v2.05a7.3 7.3 0 0 1 0 13.3v2.05a9.3 9.3 0 0 0 0-17.4Z"/></svg>
-               <span>الصوت</span>
+               <span>تشغيل الصوت</span>
              </button>
            </div>`
         : `<img src="${esc(item.src)}" alt="${esc(p.name)}" />`;
@@ -846,7 +849,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
         if (!on) vid.volume = 1;
         sndBtn.classList.toggle('on', !on);
         sndBtn.setAttribute('aria-pressed', String(!on));
-        sndBtn.querySelector('span').textContent = on ? 'الصوت' : 'إلغاء الصوت';
+        sndBtn.querySelector('span').textContent = on ? 'تشغيل الصوت' : 'كتم الصوت';
+        sndBtn.setAttribute('aria-label', on ? 'تشغيل الصوت' : 'كتم الصوت');
       });
 
     $('#pdpThumbs').innerHTML = thumbs + extLink;

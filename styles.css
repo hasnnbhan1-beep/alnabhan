@@ -332,7 +332,7 @@ body.has-cursor .cursor-glow{opacity:1}
 
 /* ======================= شريط الثقة ======================= */
 .features{padding:3.4rem 0 1rem}
-.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
 .feature{
   position:relative;display:grid;grid-template-columns:auto 1fr;align-items:start;
   gap:.15rem .8rem;padding:1.4rem 1.25rem;border-radius:var(--radius-sm);
