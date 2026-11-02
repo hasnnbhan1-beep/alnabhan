@@ -32,6 +32,7 @@
     </div>
     <h1>تطبيق المالك</h1>
     <p class="login-sub">منطقة محميّة — يدخلها المالك فقط لإدارة المنتجات والطلبات والإعدادات.</p>
+    <p class="login-lock" id="lockNote" hidden>🔒 تم تأمين الجلسة تلقائيًا بعد 15 دقيقة من عدم النشاط. أعد إدخال كلمة المرور للمتابعة.</p>
     <form id="loginForm">
       <div class="field">
         <label for="password">كلمة المرور</label>
@@ -370,12 +371,6 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="admin.js?v=8.0"></script>
-<script>
-  // رابط المتجر — يعمل على أي استضافة (جذر أو مجلد فرعي)
-  (function initStoreUrl() {
-    const el = document.getElementById('storeUrl');
-    if (el && !el.value) el.value = location.origin + location.pathname.replace(/admin(\.html)?$/, '');
-  })();
-</script>
+
 </body>
 </html>
