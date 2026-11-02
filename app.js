@@ -1388,9 +1388,36 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
     if (!$('#productModal') || $('#productModal').hidden) document.body.classList.remove('locked');
   }
 
+  // تنبيه «نسخة جديدة جاهزة» + تحديث بضغطة (سلوك تطبيقات حقيقية)
+  function watchUpdate(reg) {
+    const bar = $('#appUpdate');
+    const btn = $('#appUpdateBtn');
+    if (!bar || !btn) return;
+    const show = () => { bar.hidden = false; };
+    btn.addEventListener('click', () => {
+      if (reg.waiting) reg.waiting.postMessage('skipWaiting');
+      window.location.reload();
+    });
+    if (reg.waiting && navigator.serviceWorker.controller) show();
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (!nw) return;
+      nw.addEventListener('statechange', () => {
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) show();
+      });
+    });
+  }
+
   function initPWA() {
     if ('serviceWorker' in navigator) {
-      const reg = () => navigator.serviceWorker.register('sw.js').catch(() => {});
+      const reg = () =>
+        navigator.serviceWorker
+          .register('sw.js')
+          .then((r) => {
+            watchUpdate(r);
+            return r;
+          })
+          .catch(() => {});
       if (document.readyState === 'complete') reg();
       else window.addEventListener('load', reg, { once: true });
     }
@@ -1401,6 +1428,8 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
 
     // الزر ظاهر دائماً في الواجهة (إلا إذا التطبيق مثبّت أصلاً)
     if (btn && !standalone) btn.hidden = false;
+    const menuBtnInit = $('#menuInstall');
+    if (menuBtnInit && !standalone) menuBtnInit.hidden = false;
 
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -1436,6 +1465,17 @@ const API_BASE = 'https://kpzjtykobrdskomwwocv.supabase.co/functions/v1/nabhan';
       installBound = true;
       btn.hidden = standalone;
       btn.addEventListener('click', (e) => { e.preventDefault(); fire(); });
+
+      // بطاقة التثبيت داخل قائمة الهمبرغر (أعلى اليمين)
+      const menuBtn = $('#menuInstall');
+      if (menuBtn) {
+        menuBtn.hidden = standalone;
+        menuBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (typeof closeMobileMenu === 'function') closeMobileMenu();
+          setTimeout(fire, 120);
+        });
+      }
     }
 
     $$('[data-install-close]').forEach((el) => el.addEventListener('click', closeInstallSheet));

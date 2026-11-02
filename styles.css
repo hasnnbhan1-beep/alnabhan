@@ -285,8 +285,21 @@ body.has-cursor .cursor-glow{opacity:1}
 }
 @keyframes slideFromStart{from{transform:translateX(100%)}to{transform:none}}
 .mobile-menu-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-.mobile-menu-panel a{padding:.95rem .2rem;border-bottom:1px solid var(--stroke);font-size:1rem;color:var(--muted)}
+.mobile-menu-panel a{display:block;padding:.95rem .2rem;border-bottom:1px solid var(--stroke);font-size:1rem;color:var(--muted)}
 .mobile-menu-panel a:hover{color:var(--gold-2)}
+#mobileCats a{
+  display:flex;align-items:center;gap:.65rem;
+  padding:.78rem .55rem;font-size:.95rem;margin-inline-start:.1rem;
+  border-bottom:1px dashed rgba(255,235,240,.09);background:transparent;
+  transition:color .3s,background .3s,padding .3s;
+}
+#mobileCats a::before{
+  content:"";flex:0 0 auto;width:6px;height:6px;border-radius:50%;
+  background:linear-gradient(140deg,var(--gold-2),var(--gold-deep));
+  box-shadow:0 0 8px rgba(204,212,222,.45);
+}
+#mobileCats a:hover{color:var(--gold-2);background:rgba(255,255,255,.03)}
+#mobileCats a.active{color:var(--gold-2);font-weight:700}
 
 /* ======================= الأزرار ======================= */
 .btn{
@@ -1312,4 +1325,51 @@ html{overscroll-behavior-y:contain}
   .hero{min-height:calc(100svh - var(--header-h) - var(--catbar-h) - env(safe-area-inset-top))}
   .section{scroll-margin-top:calc(var(--header-h) + var(--catbar-h) + env(safe-area-inset-top) + 10px)}
   .install-btn{display:none !important}
+}
+
+/* ======================= بطاقة تثبيت التطبيق داخل القائمة ======================= */
+.menu-install{
+  position:relative;display:flex;align-items:center;gap:.75rem;width:100%;text-align:start;
+  margin:.2rem 0 .9rem;padding:.8rem .85rem;border-radius:16px;
+  background:
+    linear-gradient(150deg,rgba(211,58,88,.20),rgba(11,4,9,.55) 62%),
+    linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+  border:1px solid rgba(211,58,88,.34);
+  box-shadow:0 12px 28px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.10);
+  transition:transform .3s var(--ease-out),border-color .3s,box-shadow .3s;
+}
+.menu-install:active{transform:scale(.985)}
+.menu-install:hover{border-color:rgba(211,58,88,.55);box-shadow:0 16px 34px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.14)}
+.mi-ico{
+  flex:0 0 auto;display:grid;place-items:center;width:42px;height:42px;border-radius:13px;
+  background:linear-gradient(160deg,var(--gold-2),var(--gold-deep));color:#1c0511;
+  box-shadow:0 6px 16px rgba(211,58,88,.35),inset 0 1px 0 rgba(255,255,255,.7);
+}
+.mi-copy{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+.mi-copy b{font-family:var(--font-ar);font-size:.95rem;font-weight:800;color:#fff}
+.mi-copy small{font-size:.72rem;line-height:1.5;color:var(--muted)}
+.mi-arrow{flex:0 0 auto;color:var(--gold);opacity:.8;margin-inline-start:auto}
+
+/* ======================= شريط تحديث التطبيق ======================= */
+.app-update{
+  position:fixed;z-index:120;inset-inline:1rem;bottom:calc(var(--appbar-h) + 1rem);
+  display:flex;align-items:center;gap:.6rem;justify-content:center;flex-wrap:wrap;
+  padding:.7rem 1rem;border-radius:16px;font-size:.82rem;font-weight:700;
+  background:linear-gradient(180deg,rgba(34,7,20,.96),rgba(18,4,12,.96));
+  border:1px solid var(--stroke-2);color:var(--text);
+  box-shadow:0 18px 44px rgba(0,0,0,.6);
+  animation:dropDown .32s var(--ease);
+}
+.app-update .au-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--wa);flex:0 0 auto;
+  box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:auPulse 1.8s infinite;
+}
+@keyframes auPulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.55)}70%{box-shadow:0 0 0 9px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.app-update button{
+  padding:.4rem .9rem;border-radius:100px;font-weight:800;font-size:.78rem;
+  background:linear-gradient(140deg,var(--gold-2),var(--gold-deep));color:#1c0511;
+  box-shadow:0 6px 16px rgba(211,58,88,.35);
+}
+@media (min-width:761px){
+  .app-update{inset-inline:auto;left:50%;transform:translateX(-50%);bottom:1.4rem;max-width:420px}
 }
